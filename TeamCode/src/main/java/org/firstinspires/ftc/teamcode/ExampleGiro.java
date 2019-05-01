@@ -22,8 +22,6 @@ public class ExampleGiro extends LinearOpMode {
 
     AutoOpRobot robot = new AutoOpRobot();
 
-
-
     @Override
     public void runOpMode() throws InterruptedException {
 
