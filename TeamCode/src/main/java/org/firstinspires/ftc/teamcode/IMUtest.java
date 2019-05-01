@@ -10,6 +10,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import java.util.Locale;
 
+//https://ftcforum.usfirst.org/forum/ftc-technology/53812-mounting-the-revhub-vertically
+
 @TeleOp(name = "IMUtest", group = "Sensor")
 //@Disabled
 public class IMUtest extends LinearOpMode
