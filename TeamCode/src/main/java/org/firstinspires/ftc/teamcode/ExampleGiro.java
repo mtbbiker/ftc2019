@@ -18,6 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 //Objective is to Train Students how Autonomous Features work
 //How to use the Giro to drive in a Straight line
 @Autonomous(name = "ExampleGiro", group = "AutoOpTraining")
+@Disabled
 public class ExampleGiro extends LinearOpMode {
 
     AutoOpRobot robot = new AutoOpRobot();

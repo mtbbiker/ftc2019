@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -13,6 +14,7 @@ import java.util.List;
 //Objective is to Train Students how Autonomous Features work
 //How to use a camera to detect an Object and follow the Object
 @Autonomous(name = "ExampleObjectDetect", group = "AutoOpTraining")
+@Disabled
 public class ExampleObjectDetect extends LinearOpMode {
 
     AutoOpRobot robot = new AutoOpRobot();
