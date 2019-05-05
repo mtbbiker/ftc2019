@@ -47,6 +47,11 @@ First Read this document !!! http://hollybots.com/wp-content/uploads/2017/09/cre
 Follow this link to write your first code to control the motors (For us it will be the ```Toets1.java and Toets2.java``` Classes in the ```package org.firstinspires.ftc.teamcode;``` source directory)
 Check in the ```TeamCode``` source under ```./src``` Follow this [Link](https://github.com/ftctechnh/ftc_app/wiki/Creating-and-Running-an-Op-Mode-(Android-Studio))
 
+### Class definitions and where and how do we add Methods
+
+#### Class Naming
+The class name should be descriptive of what the class should actually do, stick to SOLID principles. An Object should do spesific stuff. If you declare a Class e.g. ```Robot``` this should represent the atrributes and functions of the Robot. If you want to build spesific Autonomous Class that class should implement methods spesific to that class and should encapsulate the Robot's functions - The Rule is to not mix operations and copy functions. If functions are reused, check to which class it really belong. Stick to ```OO``` principles.
+
 ## Welcome!
 This GitHub repository contains the source code that is used to build an Android app to control a *FIRST* Tech Challenge competition robot.  To use this SDK, download/clone the entire project to your local computer.
 
