@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -29,7 +30,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
-
+@Disabled
 @Autonomous(name = "Blue2", group = "Blue")
 public class TestA extends LinearOpMode {
     CloneAutoOpRobot robot = new CloneAutoOpRobot();

@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+@Disabled
 @Autonomous(name = "AOcraDriveMid", group = "AutoOp")
 public class AOcraDriveMid extends LinearOpMode{
     CloneAutoOpRobot robot = new CloneAutoOpRobot();
