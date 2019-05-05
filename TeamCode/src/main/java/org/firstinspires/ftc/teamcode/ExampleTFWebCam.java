@@ -7,6 +7,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavi
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
@@ -67,14 +68,15 @@ public class ExampleTFWebCam extends LinearOpMode {
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                     if (updatedRecognitions != null) {
                         telemetry.addData("# Object Detected", updatedRecognitions.size());
-                        if (updatedRecognitions.size() == 3) {
+                        if (updatedRecognitions.size() >= 2) {
                             int goldMineralX = -1;
                             int silverMineral1X = -1;
                             int silverMineral2X = -1;
                             for (Recognition recognition : updatedRecognitions) {
                                 if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                    telemetry.addData("Gold Mineral Detected: ","Sample");
                                     goldMineralX = (int) recognition.getLeft();
+                                    telemetry.addData("Gold Mineral Detected: ","Sample Gold detected "  +goldMineralX);
+                                    telemetry.addData("Estimate Horizontal Angle to Object:", "Angle: " + recognition.estimateAngleToObject(AngleUnit.DEGREES));
                                 } else if (silverMineral1X == -1) {
                                     silverMineral1X = (int) recognition.getLeft();
                                     telemetry.addData("Silver Mineral Detected: ","Sample 1");
@@ -85,18 +87,14 @@ public class ExampleTFWebCam extends LinearOpMode {
                             }
                             if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
                                 if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
-//                                    telemetry.addData("Gold Mineral Position", "Left");
-//                                    moveLeft();
-                                    telemetry.addData("Gold Mineral Position", "Left");
-//                                    moveRight();
+                                    telemetry.addData("Gold Mineral Position", "Left: " + goldMineralX);
+                                    //moveLeft();
                                 } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
-//                                    telemetry.addData("Gold Mineral Position", "Right");
-//                                    moveRight();
-                                    telemetry.addData("Gold Mineral Position", "Right");
-//                                    moveLeft();
+                                    telemetry.addData("Gold Mineral Position", "Right: " + goldMineralX);
+                                    //moveRight();
                                 } else {
-                                    telemetry.addData("Gold Mineral Position", "Center");
-//                                    moveMid();
+                                    telemetry.addData("Gold Mineral Position", "Center: " + goldMineralX);
+                                    //moveMid();
                                 }
                             }
                         }

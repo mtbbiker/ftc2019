@@ -35,6 +35,9 @@ public class IMUtest extends LinearOpMode
         imu                             = hardwareMap.get(BNO055IMU.class, "imu");
 
         imu.initialize(parameters);
+
+
+
         telemetry.setMsTransmissionInterval(100);
         waitForStart();
 
