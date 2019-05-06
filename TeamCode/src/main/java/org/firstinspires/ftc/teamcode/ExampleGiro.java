@@ -15,6 +15,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
+import java.util.Locale;
+
 //Objective is to Train Students how Autonomous Features work
 //How to use the Giro to drive in a Straight line
 @Autonomous(name = "ExampleGiro", group = "AutoOpTraining")
@@ -47,6 +49,28 @@ public class ExampleGiro extends LinearOpMode {
             robot.encoderDriveStraight(1,500,5);
         }
 
+
+
+    }
+    String formatAngle(AngleUnit angleUnit, double angle)
+    {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
+
+    String formatDegrees(double degrees)
+    {
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+    }
+    void sendTelemetry()
+    {
+        telemetry.addData("Status", robot.getImu().getSystemStatus().toString());
+        telemetry.addData("Calib", robot.getImu().getCalibrationStatus().toString());
+        telemetry.addData("Heading", formatAngle(robot.getAngles().angleUnit, robot.getAngles().firstAngle));
+        telemetry.addData("Roll", formatAngle(robot.getAngles().angleUnit, robot.getAngles().secondAngle));
+        telemetry.addData("Pitch", formatAngle(robot.getAngles().angleUnit, robot.getAngles().thirdAngle));
+
+        telemetry.addData("Grav", robot.getGravity().toString());
+        telemetry.update();
     }
 
 
