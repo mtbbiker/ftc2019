@@ -65,64 +65,50 @@ public class ExampleTFWebCam extends LinearOpMode {
                 tfod.activate();
             }
 
-            boolean targetAquired = false;
             while (opModeIsActive()) {
                 if (tfod != null) {
-
-                    if(!targetAquired)
-                    {
-                        //Scan for Targets
-                        // getUpdatedRecognitions() will return null if no new information is available since
-                        // the last time that call was made.
-                        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                        if (updatedRecognitions != null) {
-                            telemetry.addData("# Object Detected", updatedRecognitions.size());
-                            if (updatedRecognitions.size() >= 2) {
-                                int goldMineralX = -1;
-                                int silverMineral1X = -1;
-                                int silverMineral2X = -1;
-                                for (Recognition recognition : updatedRecognitions) {
-                                    if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                        goldMineralX = (int) recognition.getLeft();
-                                        telemetry.addData("Gold Mineral Detected: ","Sample Gold detected "  +goldMineralX);
-                                        telemetry.addData("Estimate Horizontal Angle to Object:", "Angle: " + recognition.estimateAngleToObject(AngleUnit.DEGREES));
-                                        //telemetry.addData("Estimate Distance to Object:", "Distance: " + recognition.);
-                                        targetAquired = true;
-                                        //Drive to Target when reached clear
-                                        //tfod.getUpdatedRecognitions().clear();
-                                    } else if (silverMineral1X == -1) {
-                                        silverMineral1X = (int) recognition.getLeft();
-                                        telemetry.addData("Silver Mineral Detected: ","Sample 1");
-                                    } else {
-                                        silverMineral2X = (int) recognition.getLeft();
-                                        telemetry.addData("Silver Mineral Detected: ","Sample 2");
-                                    }
-                                }
-                                if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
-                                    if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
-                                        telemetry.addData("Gold Mineral Position", "Left: " + goldMineralX);
-                                        //moveLeft();
-                                    } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
-                                        telemetry.addData("Gold Mineral Position", "Right: " + goldMineralX);
-                                        //moveRight();
-                                    } else {
-                                        telemetry.addData("Gold Mineral Position", "Center: " + goldMineralX);
-                                        //moveMid();
-                                    }
+                    //Scan for Targets
+                    // getUpdatedRecognitions() will return null if no new information is available since
+                    // the last time that call was made.
+                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                    if (updatedRecognitions != null) {
+                        telemetry.addData("# Object Detected", updatedRecognitions.size());
+                        if (updatedRecognitions.size() >= 2) {
+                            int goldMineralX = -1;
+                            int silverMineral1X = -1;
+                            int silverMineral2X = -1;
+                            double targetHeading = 0;
+                            for (Recognition recognition : updatedRecognitions) {
+                                if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                    goldMineralX = (int) recognition.getLeft();
+                                    telemetry.addData("Gold Mineral Detected: ","Sample Gold detected "  +goldMineralX);
+                                    telemetry.addData("Estimate Horizontal Angle to Object:", "Angle: " + recognition.estimateAngleToObject(AngleUnit.DEGREES));
+                                    //telemetry.addData("Estimate Distance to Object:", "Distance: " + recognition.);
+                                    targetHeading = recognition.estimateAngleToObject(AngleUnit.DEGREES);
+                                } else if (silverMineral1X == -1) {
+                                    silverMineral1X = (int) recognition.getLeft();
+                                    telemetry.addData("Silver Mineral Detected: ","Sample 1");
+                                } else {
+                                    silverMineral2X = (int) recognition.getLeft();
+                                    telemetry.addData("Silver Mineral Detected: ","Sample 2");
                                 }
                             }
-                            telemetry.update();
+                            if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
+                                if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
+                                    telemetry.addData("Gold Mineral Position", "Left: " + goldMineralX);
+                                    //Asume move will block and complete and TF interupted
+                                    //moveLeft(targetHeading);
+                                } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
+                                    telemetry.addData("Gold Mineral Position", "Right: " + goldMineralX);
+                                    //moveRight(targetHeading);
+                                } else {
+                                    telemetry.addData("Gold Mineral Position", "Center: " + goldMineralX);
+                                    //moveMid(targetHeading);
+                                }
+                            }
                         }
+                        telemetry.update();
                     }
-                    else
-                    {
-                        //Drive
-                        //When reached, reset to Scan Again
-                        targetAquired = false;
-                        tfod.getRecognitions().clear();
-                    }
-
-
                 }
             }
         }
