@@ -49,7 +49,11 @@ public class ExampleTFWebCam extends LinearOpMode {
         webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         initVuforia();
-        initTfod();
+        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
+            initTfod();
+        } else {
+            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
+        }
 
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
@@ -61,47 +65,70 @@ public class ExampleTFWebCam extends LinearOpMode {
                 tfod.activate();
             }
 
+            boolean targetAquired = false;
             while (opModeIsActive()) {
                 if (tfod != null) {
-                    // getUpdatedRecognitions() will return null if no new information is available since
-                    // the last time that call was made.
-                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                    if (updatedRecognitions != null) {
-                        telemetry.addData("# Object Detected", updatedRecognitions.size());
-                        if (updatedRecognitions.size() >= 2) {
-                            int goldMineralX = -1;
-                            int silverMineral1X = -1;
-                            int silverMineral2X = -1;
-                            for (Recognition recognition : updatedRecognitions) {
-                                if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                    goldMineralX = (int) recognition.getLeft();
-                                    telemetry.addData("Gold Mineral Detected: ","Sample Gold detected "  +goldMineralX);
-                                    telemetry.addData("Estimate Horizontal Angle to Object:", "Angle: " + recognition.estimateAngleToObject(AngleUnit.DEGREES));
-                                } else if (silverMineral1X == -1) {
-                                    silverMineral1X = (int) recognition.getLeft();
-                                    telemetry.addData("Silver Mineral Detected: ","Sample 1");
-                                } else {
-                                    silverMineral2X = (int) recognition.getLeft();
-                                    telemetry.addData("Silver Mineral Detected: ","Sample 2");
+
+                    if(!targetAquired)
+                    {
+                        //Scan for Targets
+                        // getUpdatedRecognitions() will return null if no new information is available since
+                        // the last time that call was made.
+                        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                        if (updatedRecognitions != null) {
+                            telemetry.addData("# Object Detected", updatedRecognitions.size());
+                            if (updatedRecognitions.size() >= 2) {
+                                int goldMineralX = -1;
+                                int silverMineral1X = -1;
+                                int silverMineral2X = -1;
+                                for (Recognition recognition : updatedRecognitions) {
+                                    if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                        goldMineralX = (int) recognition.getLeft();
+                                        telemetry.addData("Gold Mineral Detected: ","Sample Gold detected "  +goldMineralX);
+                                        telemetry.addData("Estimate Horizontal Angle to Object:", "Angle: " + recognition.estimateAngleToObject(AngleUnit.DEGREES));
+                                        //telemetry.addData("Estimate Distance to Object:", "Distance: " + recognition.);
+                                        targetAquired = true;
+                                        //Drive to Target when reached clear
+                                        //tfod.getUpdatedRecognitions().clear();
+                                    } else if (silverMineral1X == -1) {
+                                        silverMineral1X = (int) recognition.getLeft();
+                                        telemetry.addData("Silver Mineral Detected: ","Sample 1");
+                                    } else {
+                                        silverMineral2X = (int) recognition.getLeft();
+                                        telemetry.addData("Silver Mineral Detected: ","Sample 2");
+                                    }
+                                }
+                                if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
+                                    if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
+                                        telemetry.addData("Gold Mineral Position", "Left: " + goldMineralX);
+                                        //moveLeft();
+                                    } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
+                                        telemetry.addData("Gold Mineral Position", "Right: " + goldMineralX);
+                                        //moveRight();
+                                    } else {
+                                        telemetry.addData("Gold Mineral Position", "Center: " + goldMineralX);
+                                        //moveMid();
+                                    }
                                 }
                             }
-                            if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
-                                if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
-                                    telemetry.addData("Gold Mineral Position", "Left: " + goldMineralX);
-                                    //moveLeft();
-                                } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
-                                    telemetry.addData("Gold Mineral Position", "Right: " + goldMineralX);
-                                    //moveRight();
-                                } else {
-                                    telemetry.addData("Gold Mineral Position", "Center: " + goldMineralX);
-                                    //moveMid();
-                                }
-                            }
+                            telemetry.update();
                         }
-                        telemetry.update();
                     }
+                    else
+                    {
+                        //Drive
+                        //When reached, reset to Scan Again
+                        targetAquired = false;
+                        tfod.getRecognitions().clear();
+                    }
+
+
                 }
             }
+        }
+        //Shutdown to release resources
+        if (tfod != null) {
+            tfod.shutdown();
         }
 
     }
@@ -128,27 +155,7 @@ public class ExampleTFWebCam extends LinearOpMode {
         parameters.cameraName = webcamName;
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-//        // Loading trackables is not necessary for the Tensor Flow Object Detection engine.
-//        /**
-//         * Load the data set containing the VuMarks for Relic Recovery. There's only one trackable
-//         * in this data set: all three of the VuMarks in the game were created from this one template,
-//         * but differ in their instance id information.
-//         * @see VuMarkInstanceId
-//         */
-//        //VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-//        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("GoldBlock_OT");
-//        //relicTrackables.activate();
-//        telemetry.addData("Trackables loaded: ", relicTrackables.size());
-//
-//        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-//        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
-//
-//        telemetry.addData(">", "Press Play to start");
-//        telemetry.update();
-//        waitForStart();
-//
-//        relicTrackables.activate();
+        // Loading trackables is not necessary for the Tensor Flow Object Detection engine.
     }
 
     /**
@@ -161,5 +168,7 @@ public class ExampleTFWebCam extends LinearOpMode {
         //tfodParameters.minimumConfidence=0.9;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
+        //Object Tracker is by default on
+        //tfodParameters.useObjectTracker = true;
     }
 }
