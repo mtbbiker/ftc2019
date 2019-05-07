@@ -29,23 +29,22 @@ public class ExampleGiro extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         robot.init(hardwareMap);
-        robot.setRobottelemetry(telemetry);
-        //Initiate the Gyro
-        robot.callibrateGyro();
-        robot.resetGyro();
-
-        telemetry.addData(">", "Press Play to start tracking");
+        telemetry.addData(">", "ExampleGiro: Press Play to start tracking");
         telemetry.update();
 
         waitForStart();
-
+        robot.setRobottelemetry(telemetry);
+        //Initiate the Gyro
         robot.start();
+
+        robot.callibrateGyro();
+        robot.resetGyro();
 
         // Loop until we're asked to stop
         while (opModeIsActive())  {
 
             //Assume the Sample heading was detected as 0.0 (Drive straight forward)
-            robot.imuTurn(1,17,3);
+            //robot.imuTurn(1,17,3);
         }
 
 

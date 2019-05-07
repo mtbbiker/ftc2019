@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -28,8 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Autonomous(name = "AutoOpRoverRuckas", group = "AutoOp")
+@Disabled
 public class AutoOpRoverRuckas extends LinearOpMode {
-    AutoOpRobot robot = new AutoOpRobot();
+    CloneAutoOpRobot robot = new CloneAutoOpRobot();
 
     private static final String VUFORIA_KEY = "Adt99vT/////AAABmQfaL1Gc6k6YpSV4p0gyJUg3w2FZlS8RqVrXnweJXsLcl6JrGb5Age+Cv4I9IS+9XG2ZMhWR19WkeOkWkrTXMzKjblOZGI0FC/WUj9CXpGB7wTS8qQuNHut0NT3aZzPjx3aNnjfUCmBvwrCcVHgvLBLU460n9TE9Yug17HApyE+ix9xcJ2J5QtVejR9PNm8SNmpFAEyGmSasukJHF0Em7cNrHAsR5MxPSCBAnQA3B2pL5onCRotpWAu0rcOCYfXWrHeVtYAEHzm3GdFRj73cQ3eGFgOCHJSyMC0AhHH0M8cFlltdKc0f08FHioKrXu8OpvLGCTtYMSZ6Jq2we4+keaVEPBZY6U4YBffLK7jQnP1p";
     private static final float mmFTCFieldWidth = (12 * 6);       // the width of the FTC field (from the center point to the outer panels)
@@ -122,18 +124,18 @@ public class AutoOpRoverRuckas extends LinearOpMode {
                                         telemetry.addData("Gold Mineral Position", "Left");
                                         robot.MoveL();
                                         robot.Sample();
-                                        robot.ResetLeft();
+                                        //robot.ResetLeft();
                                         blockMove = true;
                                     } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
                                         telemetry.addData("Gold Mineral Position", "Right");
                                         robot.MoveR();
                                         robot.Sample();
-                                        robot.ResetRight();
+                                        //robot.ResetRight();
                                         blockMove = true;
                                     } else {
                                         telemetry.addData("Gold Mineral Position", "Center");
                                         robot.Sample();
-                                        robot.ResetMid();
+                                        //robot.ResetMid();
                                         blockMove = true;
                                     }
                                 }
@@ -316,13 +318,13 @@ public class AutoOpRoverRuckas extends LinearOpMode {
                         robot.stopRobot();
                         telemetry.addLine("Stop Blue or Red");
                         telemetry.update();
-                        robot.MoveFromCrator();
+                        //robot.MoveFromCrator();
                     }
                     if (BackSpaceV || FrontCratersV) {
                         robot.stopRobot();
                         telemetry.addLine("Stop Back Space or Front Crater");
                         telemetry.update();
-                        robot.MoveFromCorner();
+                        //robot.MoveFromCorner();
                     }
                 }
                 telemetry.update();

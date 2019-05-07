@@ -16,8 +16,8 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import java.util.List;
 
 //This Class is a Test to use TF to get a Heading and then Sample based on feedback from the IMU
-@Disabled
-@Autonomous(name = "AOcorDriveLeft", group = "AutoOp")
+//@Disabled
+@Autonomous(name = "AOSampleHeadingTest", group = "AutoOp")
 public class AOSampleHeadingTest extends LinearOpMode {
 
     public static final String TAG = "Vuforia VuMark Sample";
@@ -35,7 +35,7 @@ public class AOSampleHeadingTest extends LinearOpMode {
      * This is the webcam we are to use. As with other hardware devices such as motors and
      * servos, this device is identified using the robot configuration tool in the FTC application.
      */
-    WebcamName webcamName;
+
 
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
@@ -54,7 +54,7 @@ public class AOSampleHeadingTest extends LinearOpMode {
         /*
          * Retrieve the camera we are to use.
          */
-        webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
+        //webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         initVuforia();
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
@@ -151,7 +151,7 @@ public class AOSampleHeadingTest extends LinearOpMode {
          * We also indicate which camera on the RC we wish to use. For pedagogical purposes,
          * we use the same logic as in {@link ConceptVuforiaNavigationWebcam}.
          */
-        parameters.cameraName = webcamName;
+        parameters.cameraName = robot.getWebcamName();
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
         // Loading trackables is not necessary for the Tensor Flow Object Detection engine.
