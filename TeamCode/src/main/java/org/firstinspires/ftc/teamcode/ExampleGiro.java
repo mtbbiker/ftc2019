@@ -20,7 +20,7 @@ import java.util.Locale;
 //Objective is to Train Students how Autonomous Features work
 //How to use the Giro to drive in a Straight line
 @Autonomous(name = "ExampleGiro", group = "AutoOpTraining")
-@Disabled
+//@Disabled
 public class ExampleGiro extends LinearOpMode {
 
     AutoOpRobot robot = new AutoOpRobot();
@@ -28,19 +28,18 @@ public class ExampleGiro extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-
-
         robot.init(hardwareMap);
-
-        telemetry.addData(">", "Press Play to start tracking");
-        telemetry.update();
-        waitForStart();
         robot.setRobottelemetry(telemetry);
         //Initiate the Gyro
         robot.callibrateGyro();
         robot.resetGyro();
-        robot.start();
 
+        telemetry.addData(">", "Press Play to start tracking");
+        telemetry.update();
+
+        waitForStart();
+
+        robot.start();
 
         // Loop until we're asked to stop
         while (opModeIsActive())  {
