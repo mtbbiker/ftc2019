@@ -45,7 +45,7 @@ public class ExampleGiro extends LinearOpMode {
         while (opModeIsActive())  {
 
             //Assume the Sample heading was detected as 0.0 (Drive straight forward)
-            robot.encoderTurnHeading(1,17,3);
+            robot.imuTurn(1,17,3);
         }
 
 

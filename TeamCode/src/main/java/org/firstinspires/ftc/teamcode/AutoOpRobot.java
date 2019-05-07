@@ -275,7 +275,7 @@ public class AutoOpRobot extends LinearOpMode {
      * @param heading Degrees the robot must turn relative to last position
      * @param timeoutS Timeout
      */
-    public void encoderTurnHeading(double speed, double heading, double timeoutS){
+    public void imuTurn(double speed, double heading, double timeoutS){
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
             //We use Tank Drive in all 4 wheels, so make sure we sent the correct signals to both Left and Right wheels
@@ -283,6 +283,8 @@ public class AutoOpRobot extends LinearOpMode {
 
             // reset the timeout time and start motion.
             timer.reset();
+            //Reset imu Global heading to start with a relative zero heading
+            resetAngle();
             // keep looping while we are still active, and there is time left, and both motors are running.
             //We use the IMU here to turn untill heading is reached
             while (opModeIsActive() && timer.seconds() < timeoutS && getAngles().firstAngle <= heading)
@@ -324,6 +326,8 @@ public class AutoOpRobot extends LinearOpMode {
 
             motorLeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motorRightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            //Reset Again
+            resetAngle();
         }
     }
 
@@ -388,6 +392,65 @@ public class AutoOpRobot extends LinearOpMode {
         }
     }
 
+    /**
+     * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
+     * @param degrees Degrees to turn, + is left - is right
+     */
+    private void rotate(int degrees, double power)
+    {
+        double  leftPower, rightPower;
+
+        // restart imu movement tracking.
+        resetAngle();
+
+        // getAngle() returns + when rotating counter clockwise (left) and - when rotating
+        // clockwise (right).
+
+        if (degrees < 0)
+        {   // turn right.
+            leftPower = power;
+            rightPower = -power;
+        }
+        else if (degrees > 0)
+        {   // turn left.
+            leftPower = -power;
+            rightPower = power;
+        }
+        else return;
+
+        // set power to rotate.
+        //leftMotor.setPower(leftPower);
+        //rightMotor.setPower(rightPower);
+        motorLeftFront.setPower(leftPower);
+        motorLeftRear.setPower(leftPower);
+
+        motorRightFront.setPower(rightPower);
+        motorRightRear.setPower(rightPower);
+
+        // rotate until turn is completed.
+        if (degrees < 0)
+        {
+            // On right turn we have to get off zero first.
+            while (opModeIsActive() && getAngle() == 0) {}
+
+            while (opModeIsActive() && getAngle() > degrees) {}
+        }
+        else    // left turn.
+            while (opModeIsActive() && getAngle() < degrees) {}
+
+        // turn the motors off.
+        motorLeftFront.setPower(0);
+        motorLeftRear.setPower(0);
+
+        motorRightFront.setPower(0);
+        motorRightRear.setPower(0);
+
+        // wait for rotation to stop.
+        sleep(1000);
+
+        // reset angle tracking on new heading.
+        resetAngle();
+    }
 
     public void lower() {
 

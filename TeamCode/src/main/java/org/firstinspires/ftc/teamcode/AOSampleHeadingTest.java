@@ -96,7 +96,7 @@ public class AOSampleHeadingTest extends LinearOpMode {
                                     targetHeading = recognition.estimateAngleToObject(AngleUnit.DEGREES);
                                     telemetry.addData("Estimate Horizontal Angle to Object:", "Angle: " + targetHeading);
                                     //telemetry.addData("Estimate Distance to Object:", "Distance: " + recognition.);
-                                    robot.encoderTurnHeading(1,targetHeading,3);
+                                    robot.imuTurn(1,targetHeading,3);
                                 } else if (silverMineral1X == -1) {
                                     silverMineral1X = (int) recognition.getLeft();
                                     telemetry.addData("Silver Mineral Detected: ","Sample 1");
