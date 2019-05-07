@@ -45,8 +45,8 @@ public class ExampleGiro extends LinearOpMode {
         // Loop until we're asked to stop
         while (opModeIsActive())  {
 
-            //Drive in a Straight Line using the Gyro
-            robot.encoderDriveStraight(1,500,5);
+            //Assume the Sample heading was detected as 0.0 (Drive straight forward)
+            robot.encoderTurnHeading(1,17,3);
         }
 
 

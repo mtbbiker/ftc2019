@@ -16,6 +16,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
+import java.util.Locale;
+
 public class AutoOpRobot extends LinearOpMode {
 
     public DcMotor motorLeftFront;
@@ -274,8 +276,6 @@ public class AutoOpRobot extends LinearOpMode {
      * @param timeoutS Timeout
      */
     public void encoderTurnHeading(double speed, double heading, double timeoutS){
-
-
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
             //We use Tank Drive in all 4 wheels, so make sure we sent the correct signals to both Left and Right wheels
@@ -283,26 +283,31 @@ public class AutoOpRobot extends LinearOpMode {
 
             // reset the timeout time and start motion.
             timer.reset();
-            if(heading>0)//turn right
-            {
-                motorLeftFront.setPower(Math.abs(speed));
-                motorRightFront.setPower(Math.abs(speed));
-            }
-            else {//Turn Left untill
-                motorLeftRear.setPower(Math.abs(speed));
-                motorRightRear.setPower(Math.abs(speed));
-            }
             // keep looping while we are still active, and there is time left, and both motors are running.
-            //Only monitor the Back wheels
-            while (opModeIsActive() &&
-                    (timer.seconds() < timeoutS) && getAngles().firstAngle < heading)
+            //We use the IMU here to turn untill heading is reached
+            while (opModeIsActive() && timer.seconds() < timeoutS && getAngles().firstAngle <= heading)
             {
-                angles  = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-                gravity = imu.getGravity();
-
                 // Display it for the Debugging.
-                robottelemetry.addData("Heading",  "Running to Target Heading %7d ", heading);
+                robottelemetry.addData("Heading",  "Running to Target Heading %7d ", formatAngle(angles.angleUnit, angles.firstAngle));
                 robottelemetry.update();
+                if(angles.firstAngle<heading)
+                {
+                    //Turn left
+                    motorLeftFront.setPower(-speed);
+                    motorLeftRear.setPower(-speed);
+
+                    motorRightFront.setPower(speed);
+                    motorRightRear.setPower(speed);
+                }
+                else
+                {
+                    //Turn Right
+                    motorLeftFront.setPower(speed);
+                    motorLeftRear.setPower(speed);
+
+                    motorRightFront.setPower(-speed);
+                    motorRightRear.setPower(-speed);
+                }
             }
 
             robottelemetry.addData("Power Reset","Power set to 0");
@@ -358,9 +363,7 @@ public class AutoOpRobot extends LinearOpMode {
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             //Only monitor the Back wheels
-            while (opModeIsActive() &&
-                    (timer.seconds() < timeoutS) &&
-                    (motorLeftRear.isBusy() ||  motorRightRear.isBusy()))
+            while (opModeIsActive() && (timer.seconds() < timeoutS) && (motorLeftRear.isBusy() ||  motorRightRear.isBusy()))
             {
 
                 // Display it for the Debugging.
@@ -726,6 +729,76 @@ public class AutoOpRobot extends LinearOpMode {
 
     String formatFloat(float rate) {
         return String.format("%.3f", rate);
+    }
+
+    String formatAngle(AngleUnit angleUnit, double angle)
+    {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
+
+    String formatDegrees(double degrees)
+    {
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+    }
+
+    /**
+     * Resets the cumulative angle tracking to zero.
+     */
+    private void resetAngle()
+    {
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        globalAngle = 0;
+    }
+
+    /**
+     * Get current cumulative angle rotation from last reset.
+     * @return Angle in degrees. + = left, - = right.
+     */
+    private double getAngle()
+    {
+        // We experimentally determined the Z axis is the axis we want to use for heading angle.
+        // We have to process the angle because the imu works in euler angles so the Z axis is
+        // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
+        // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
+
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
+
+        if (deltaAngle < -180)
+            deltaAngle += 360;
+        else if (deltaAngle > 180)
+            deltaAngle -= 360;
+
+        globalAngle += deltaAngle;
+
+        lastAngles = angles;
+
+        return globalAngle;
+    }
+
+    /**
+     * See if we are moving in a straight line and if not return a power correction value.
+     * @return Power adjustment, + is adjust left - is adjust right.
+     */
+    private double checkDirection()
+    {
+        // The gain value determines how sensitive the correction is to direction changes.
+        // You will have to experiment with your robot to get small smooth direction changes
+        // to stay on a straight line.
+        double correction, angle, gain = .10;
+
+        angle = getAngle();
+
+        if (angle == 0)
+            correction = 0;             // no adjustment.
+        else
+            correction = -angle;        // reverse sign of angle for correction.
+
+        correction = correction * gain;
+
+        return correction;
     }
 
     public BNO055IMU getImu() {
