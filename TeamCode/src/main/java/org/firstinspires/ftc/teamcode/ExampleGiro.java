@@ -34,9 +34,9 @@ public class ExampleGiro extends LinearOpMode {
 
         waitForStart();
         robot.setRobottelemetry(telemetry);
-        //Initiate the Gyro
-        robot.start();
 
+        robot.start();
+        //Initiate the Gyro
         robot.callibrateGyro();
         robot.resetGyro();
 
@@ -44,7 +44,8 @@ public class ExampleGiro extends LinearOpMode {
         while (opModeIsActive())  {
 
             //Assume the Sample heading was detected as 0.0 (Drive straight forward)
-            //robot.imuTurn(1,17,3);
+            telemetry.addData(">Active<", "Turning");
+            robot.imuTurn(0.5,17,3);
         }
 
 

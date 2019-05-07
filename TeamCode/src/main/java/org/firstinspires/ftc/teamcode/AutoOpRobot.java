@@ -62,6 +62,8 @@ public class AutoOpRobot extends LinearOpMode {
     Orientation             lastAngles = new Orientation();
     double                  globalAngle, power = .30, correction;
 
+    BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+
     public AutoOpRobot() {
 
     }
@@ -111,21 +113,23 @@ public class AutoOpRobot extends LinearOpMode {
         motorExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         dropBeaconServo = masterConfig.servo.get("DropBeaconServo");
-        dropBeaconServo.setPosition(0.5);
+        //dropBeaconServo.setPosition(0.5);
 
-        //robottelemetry.addData("Motor Config added:" ,"Value: ");
+        webcamName = masterConfig.get(WebcamName.class, "Webcam 1");
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+                //robottelemetry.addData("Motor Config added:" ,"Value: ");
+
+        imu = masterConfig.get(BNO055IMU.class, "imu");
+
         parameters.angleUnit            = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit            = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled       = true;
         parameters.useExternalCrystal   = true;
         parameters.mode                 = BNO055IMU.SensorMode.IMU;
         parameters.loggingTag           = "IMU";
-        imu = masterConfig.get(BNO055IMU.class, "imu");
-        getImu().initialize(parameters);
 
-        webcamName = masterConfig.get(WebcamName.class, "Webcam 1");
+        imu.initialize(parameters);
+
 
         // Get a reference to a Modern Robotics gyro object. We use several interfaces
         // on this object to illustrate which interfaces support which functionality.
@@ -146,7 +150,7 @@ public class AutoOpRobot extends LinearOpMode {
             sleep(50);
             idle();
         }
-        robottelemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
+        robottelemetry.addData("Auto OP imu calib status", imu.getCalibrationStatus().toString());
         robottelemetry.update();
 //
 //        gyro = (IntegratingGyroscope)modernRoboticsI2cGyro;
@@ -172,11 +176,28 @@ public class AutoOpRobot extends LinearOpMode {
     }
 
     public void resetGyro(){
+        angles  = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        gravity = imu.getGravity();
+        sendTelemetry();
+
+
 //        // Before the OpMode is started we reset the Gyro
 //        curResetState = true;
 //        if (curResetState && !lastResetState) {
 //            modernRoboticsI2cGyro.resetZAxisIntegrator();
 //        }
+    }
+
+    void sendTelemetry()
+    {
+        robottelemetry.addData("AO Status", imu.getSystemStatus().toString());
+        robottelemetry.addData("AO Calib", imu.getCalibrationStatus().toString());
+        robottelemetry.addData("AO Heading", formatAngle(angles.angleUnit, angles.firstAngle));
+        robottelemetry.addData("AO Roll", formatAngle(angles.angleUnit, angles.secondAngle));
+        robottelemetry.addData("AO Pitch", formatAngle(angles.angleUnit, angles.thirdAngle));
+
+        robottelemetry.addData("AO Grav", gravity.toString());
+        robottelemetry.update();
     }
 
     /**
@@ -288,15 +309,15 @@ public class AutoOpRobot extends LinearOpMode {
      */
     public void imuTurn(double speed, double heading, double timeoutS){
         // Ensure that the opmode is still active
+        // reset the timeout time and start motion.
+        runtime.reset();
+        //Reset imu Global heading to start with a relative zero heading
+        resetAngle();
+
         if (opModeIsActive()) {
             //We use Tank Drive in all 4 wheels, so make sure we sent the correct signals to both Left and Right wheels
             // Determine new target position, and pass to motor controller
-
-            // reset the timeout time and start motion.
-            runtime.reset();
-            //Reset imu Global heading to start with a relative zero heading
-            resetAngle();
-            // keep looping while we are still active, and there is time left, and both motors are running.
+           // keep looping while we are still active, and there is time left, and both motors are running.
             //We use the IMU here to turn untill heading is reached
             while (opModeIsActive() && runtime.seconds() < timeoutS && getAngles().firstAngle <= heading)
             {
