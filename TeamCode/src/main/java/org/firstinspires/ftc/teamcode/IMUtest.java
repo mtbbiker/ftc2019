@@ -71,6 +71,9 @@ public class IMUtest extends LinearOpMode
         telemetry.addData("Mode", "waiting for start");
         telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
         telemetry.update();
+        
+        //Reset Angles
+        resetAngle();
 
         // wait for start button.
         waitForStart();
