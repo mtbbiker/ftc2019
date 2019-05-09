@@ -89,6 +89,7 @@ public class AOSampleHeadingTest extends LinearOpMode {
                             int silverMineral1X = -1;
                             int silverMineral2X = -1;
                             double targetHeading = 0;
+                            boolean targetfound = false;
                             for (Recognition recognition : updatedRecognitions) {
                                 if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
                                     goldMineralX = (int) recognition.getLeft();
@@ -96,7 +97,17 @@ public class AOSampleHeadingTest extends LinearOpMode {
                                     targetHeading = recognition.estimateAngleToObject(AngleUnit.DEGREES);
                                     telemetry.addData("Estimate Horizontal Angle to Object:", "Angle: " + targetHeading);
                                     //telemetry.addData("Estimate Distance to Object:", "Distance: " + recognition.);
-                                    robot.imuTurn(1,targetHeading,3);
+                                    //robot.imuTurn(1,targetHeading,3);
+                                    if(!targetfound) {
+                                        robot.rotate(-1 * (int) Math.round(targetHeading), 0.5);
+                                        telemetry.addData("Target found Object:", "Angle: " + robot.getAngle());
+                                        targetfound=true;
+                                    }
+                                    //Sample
+                                    //Drop beacon
+                                    //Move to crater
+                                    //Stop
+
                                 } else if (silverMineral1X == -1) {
                                     silverMineral1X = (int) recognition.getLeft();
                                     telemetry.addData("Silver Mineral Detected: ","Sample 1");
@@ -105,19 +116,19 @@ public class AOSampleHeadingTest extends LinearOpMode {
                                     telemetry.addData("Silver Mineral Detected: ","Sample 2");
                                 }
                             }
-                            if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
-                                if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
-                                    telemetry.addData("Gold Mineral Position", "Left: " + goldMineralX);
-                                    //Asume move will block and complete and TF interupted
-                                    //moveLeft(targetHeading);
-                                } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
-                                    telemetry.addData("Gold Mineral Position", "Right: " + goldMineralX);
-                                    //moveRight(targetHeading);
-                                } else {
-                                    telemetry.addData("Gold Mineral Position", "Center: " + goldMineralX);
-                                    //moveMid(targetHeading);
-                                }
-                            }
+//                            if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
+//                                if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
+//                                    telemetry.addData("Gold Mineral Position", "Left: " + goldMineralX);
+//                                    //Asume move will block and complete and TF interupted
+//                                    //moveLeft(targetHeading);
+//                                } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
+//                                    telemetry.addData("Gold Mineral Position", "Right: " + goldMineralX);
+//                                    //moveRight(targetHeading);
+//                                } else {
+//                                    telemetry.addData("Gold Mineral Position", "Center: " + goldMineralX);
+//                                    //moveMid(targetHeading);
+//                                }
+//                            }
                         }
                         telemetry.update();
                     }

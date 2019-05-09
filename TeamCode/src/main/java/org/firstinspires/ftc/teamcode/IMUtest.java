@@ -53,31 +53,31 @@ public class IMUtest extends LinearOpMode
         // Y and Z swapped
         // remap order {Z Y X} -> Y (01), Z (10), X (00) [0001 1000]bin => 0x018
 
-        // All swapped
-        //remap order {Z Y X} -> Y (01), X (00), Z (10) [0001 0010]bin => 0x012
-        byte AXIS_MAP_CONFIG_BYTE = 0x18; //0x12 // 06 This is what to write to the AXIS_MAP_CONFIG register to swap x and z axes
-        //Bit { X sign, Y sign, Z sign }
-        //Example all positive [000]bin => 0x00
-        //Change sign Z [001]bin
-        byte AXIS_MAP_SIGN_BYTE = 0x01; // 01 This is what to write to the AXIS_MAP_SIGN register to negate the z axis
-
-        //Need to be in CONFIG mode to write to registers
-        imu.write8(BNO055IMU.Register.OPR_MODE,BNO055IMU.SensorMode.CONFIG.bVal & 0x0F);
-
-        sleep(100); //Changing modes requires a delay before doing anything else
-
-        //Write to the AXIS_MAP_CONFIG register
-        imu.write8(BNO055IMU.Register.AXIS_MAP_CONFIG,AXIS_MAP_CONFIG_BYTE & 0x0F);
-
-        //Write to the AXIS_MAP_SIGN register
-        imu.write8(BNO055IMU.Register.AXIS_MAP_SIGN,AXIS_MAP_SIGN_BYTE & 0x0F);
-
-        //Need to change back into the IMU mode to use the gyro
-        imu.write8(BNO055IMU.Register.OPR_MODE,BNO055IMU.SensorMode.IMU.bVal & 0x0F);
-
-        sleep(100); //Changing modes again requires a delay
-
-        telemetry.setMsTransmissionInterval(100);
+//        // All swapped
+//        //remap order {Z Y X} -> Y (01), X (00), Z (10) [0001 0010]bin => 0x012
+//        byte AXIS_MAP_CONFIG_BYTE = 0x18; //0x12 // 06 This is what to write to the AXIS_MAP_CONFIG register to swap x and z axes
+//        //Bit { X sign, Y sign, Z sign }
+//        //Example all positive [000]bin => 0x00
+//        //Change sign Z [001]bin
+//        byte AXIS_MAP_SIGN_BYTE = 0x01; // 01 This is what to write to the AXIS_MAP_SIGN register to negate the z axis
+//
+//        //Need to be in CONFIG mode to write to registers
+//        imu.write8(BNO055IMU.Register.OPR_MODE,BNO055IMU.SensorMode.CONFIG.bVal & 0x0F);
+//
+//        sleep(100); //Changing modes requires a delay before doing anything else
+//
+//        //Write to the AXIS_MAP_CONFIG register
+//        imu.write8(BNO055IMU.Register.AXIS_MAP_CONFIG,AXIS_MAP_CONFIG_BYTE & 0x0F);
+//
+//        //Write to the AXIS_MAP_SIGN register
+//        imu.write8(BNO055IMU.Register.AXIS_MAP_SIGN,AXIS_MAP_SIGN_BYTE & 0x0F);
+//
+//        //Need to change back into the IMU mode to use the gyro
+//        imu.write8(BNO055IMU.Register.OPR_MODE,BNO055IMU.SensorMode.IMU.bVal & 0x0F);
+//
+//        sleep(100); //Changing modes again requires a delay
+//
+//        telemetry.setMsTransmissionInterval(100);
 
         // make sure the imu gyro is calibrated before continuing.
         while (!isStopRequested() && !imu.isGyroCalibrated())
@@ -142,7 +142,7 @@ public class IMUtest extends LinearOpMode
     {
         //AxesReference indicates whether we have INTRINSIC rotations, where the axes move with the object that is rotating,
         // or EXTRINSIC rotations, where they remain fixed in the world around the object.
-        lastAngles = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         globalAngle = 0;
     }
@@ -158,7 +158,7 @@ public class IMUtest extends LinearOpMode
         // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
         // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
 
-        Orientation _angles = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        Orientation _angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         double deltaAngle = _angles.firstAngle - lastAngles.firstAngle;
 

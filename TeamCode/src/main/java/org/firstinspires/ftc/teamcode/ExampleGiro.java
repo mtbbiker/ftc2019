@@ -40,13 +40,35 @@ public class ExampleGiro extends LinearOpMode {
         robot.callibrateGyro();
         robot.resetGyro();
 
-        // Loop until we're asked to stop
-        while (opModeIsActive())  {
-
+//        // Loop until we're asked to stop
+//        while (opModeIsActive())  {
+//
             //Assume the Sample heading was detected as 0.0 (Drive straight forward)
-            telemetry.addData(">Active<", "Turning");
-            robot.imuTurn(0.5,17,3);
-        }
+        telemetry.addData(">Active<", "Turning");
+        telemetry.update();
+        //robot.imuTurn(0.5,17,3);
+        telemetry.addData("Turned, ", "Heading" + robot.getAngle());
+        telemetry.update();
+
+        robot.rotate(-90,0.1);
+        telemetry.addData("Turned, ", "Heading" + robot.getAngle());
+        telemetry.update();
+
+        robot.rotate(15,0.3);
+        telemetry.addData("Turned, ", "Heading" + robot.getAngle());
+        telemetry.update();
+
+        robot.rotate(-30,0.5);
+        telemetry.addData("Turned, ", "Heading" + robot.getAngle());
+        telemetry.update();
+
+        robot.rotate(45,1);
+
+            telemetry.addData("Turned, ", "Heading" + robot.getAngle());
+            telemetry.update();
+//
+//            break;
+//        }
 
 
 
