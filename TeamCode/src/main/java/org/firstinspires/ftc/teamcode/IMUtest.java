@@ -47,7 +47,18 @@ public class IMUtest extends LinearOpMode
 
         imu.initialize(parameters);
 
-        byte AXIS_MAP_CONFIG_BYTE = 0x18; // 06 This is what to write to the AXIS_MAP_CONFIG register to swap x and z axes
+        //Default
+        // {Z Y X} -> Z (10), Y (01), X (00) [0010 0100]bin => 0x024
+
+        // Y and Z swapped
+        // remap order {Z Y X} -> Y (01), Z (10), X (00) [0001 1000]bin => 0x018
+
+        // All swapped
+        //remap order {Z Y X} -> Y (01), X (00), Z (10) [0001 0010]bin => 0x012
+        byte AXIS_MAP_CONFIG_BYTE = 0x18; //0x12 // 06 This is what to write to the AXIS_MAP_CONFIG register to swap x and z axes
+        //Bit { X sign, Y sign, Z sign }
+        //Example all positive [000]bin => 0x00
+        //Change sign Z [001]bin
         byte AXIS_MAP_SIGN_BYTE = 0x01; // 01 This is what to write to the AXIS_MAP_SIGN register to negate the z axis
 
         //Need to be in CONFIG mode to write to registers
@@ -131,7 +142,7 @@ public class IMUtest extends LinearOpMode
     {
         //AxesReference indicates whether we have INTRINSIC rotations, where the axes move with the object that is rotating,
         // or EXTRINSIC rotations, where they remain fixed in the world around the object.
-        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        lastAngles = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         globalAngle = 0;
     }
@@ -147,7 +158,7 @@ public class IMUtest extends LinearOpMode
         // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
         // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
 
-        Orientation _angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        Orientation _angles = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         double deltaAngle = _angles.firstAngle - lastAngles.firstAngle;
 
