@@ -25,7 +25,12 @@ public class IMUtest extends LinearOpMode
     double                  globalAngle, power = .30, correction;
 
     Orientation             lastAngles = new Orientation();
-
+    //First is the matter of the axes reference:
+    // INTRINSIC: is the coordinate system in which the referred-to rotational axes reside in a coordinate system that moves with
+    // (and so remains fixed relative to) the object being rotated,
+    // EXTRINSIC The axes remain fixed relative to the world around the object and are unaffected by the object's rotational motion?
+    // Both points of view are equally valid methodologies, but one or the other may be more understandable or useful in a given application situation.
+    // https://en.wikipedia.org/wiki/Euler_angles
 
     @Override
     public void runOpMode()
@@ -42,8 +47,8 @@ public class IMUtest extends LinearOpMode
 
         imu.initialize(parameters);
 
-        byte AXIS_MAP_CONFIG_BYTE = 0x06; // 06 This is what to write to the AXIS_MAP_CONFIG register to swap x and z axes
-        byte AXIS_MAP_SIGN_BYTE = 0x00; // 01 This is what to write to the AXIS_MAP_SIGN register to negate the z axis
+        byte AXIS_MAP_CONFIG_BYTE = 0x18; // 06 This is what to write to the AXIS_MAP_CONFIG register to swap x and z axes
+        byte AXIS_MAP_SIGN_BYTE = 0x01; // 01 This is what to write to the AXIS_MAP_SIGN register to negate the z axis
 
         //Need to be in CONFIG mode to write to registers
         imu.write8(BNO055IMU.Register.OPR_MODE,BNO055IMU.SensorMode.CONFIG.bVal & 0x0F);
@@ -124,7 +129,9 @@ public class IMUtest extends LinearOpMode
      */
     private void resetAngle()
     {
-        lastAngles = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        //AxesReference indicates whether we have INTRINSIC rotations, where the axes move with the object that is rotating,
+        // or EXTRINSIC rotations, where they remain fixed in the world around the object.
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         globalAngle = 0;
     }
@@ -140,7 +147,7 @@ public class IMUtest extends LinearOpMode
         // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
         // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
 
-        Orientation _angles = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        Orientation _angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         double deltaAngle = _angles.firstAngle - lastAngles.firstAngle;
 
