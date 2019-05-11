@@ -145,8 +145,10 @@ public class TestA extends LinearOpMode {
         //*****************************************************************************************************************
         //Forward 500 mm
         robot.encoderDriveForwardorBackwards(DRIVE_SPEED,500,5);
+
+        encoderDriveForwardorBackwards(DRIVE_SPEED,500,5);
         //Turn left
-        robot.encoderTurn(TURN_SPEED,-150,150,5);
+        //robot.encoderTurn(TURN_SPEED,-150,150,5);
         //Reverse 500 mm
         //encoderDriveForwardorBackwards(DRIVE_SPEED,-500,5);
 

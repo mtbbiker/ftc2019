@@ -26,7 +26,7 @@ public class ExampleGiro extends LinearOpMode {
 
     //AutoOpRobot robot = new AutoOpRobot();
     CloneAutoOpRobot robot = new CloneAutoOpRobot();
-    private ElapsedTime runtime = new ElapsedTime();
+   // private ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -34,6 +34,25 @@ public class ExampleGiro extends LinearOpMode {
         robot.init(hardwareMap);
         telemetry.addData(">", "ExampleGiro: Press Play to start tracking");
         telemetry.update();
+
+        robot.motorLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.motorLeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.motorRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.motorRightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.motorLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.motorExtend.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.motorLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.motorLeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        robot.motorRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.motorRightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        robot.motorLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.motorExtend.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
         waitForStart();
 

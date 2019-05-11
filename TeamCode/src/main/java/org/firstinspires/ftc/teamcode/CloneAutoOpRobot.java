@@ -391,11 +391,12 @@ public class CloneAutoOpRobot extends LinearOpMode {
             motorRightFront.setTargetPosition(newRightFrontTarget);
             motorRightRear.setTargetPosition(newRightRearTarget);
 
-//            // Turn On RUN_TO_POSITION
-//            motorLeftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            motorLeftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            motorRightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            motorRightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            // Turn On RUN_TO_POSITION
+            motorLeftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorLeftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorRightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorRightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
             // reset the timeout time and start motion.
             runtime.reset();

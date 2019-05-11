@@ -235,6 +235,8 @@ public class AutoOpRobot extends LinearOpMode {
             motorRightFront.setTargetPosition(newRightFrontTarget);
             motorRightRear.setTargetPosition(newRightRearTarget);
 
+            enableRunToPosition();
+
             // reset the timeout time and start motion.
             runtime.reset();
             motorLeftFront.setPower(Math.abs(speed));
