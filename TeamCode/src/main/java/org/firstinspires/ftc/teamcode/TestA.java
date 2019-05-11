@@ -30,8 +30,8 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
-@Disabled
-@Autonomous(name = "Blue2", group = "Blue")
+//@Disabled
+@Autonomous(name = "TestingRun", group = "Testing")
 public class TestA extends LinearOpMode {
     CloneAutoOpRobot robot = new CloneAutoOpRobot();
     private ElapsedTime runtime = new ElapsedTime();
@@ -89,7 +89,6 @@ public class TestA extends LinearOpMode {
          */
         robot.init(hardwareMap);
 
-        // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
@@ -125,6 +124,10 @@ public class TestA extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        robot.setRobottelemetry(telemetry);
+
+        robot.start();
+
         //NOTE From https://ftcforum.usfirst.org/forum/ftc-technology/android-studio/66556-encoders-not-reading-correctly
         //Add the following line to Test the encoders, getting values from them
         //*****************************************************************************************************************
@@ -141,45 +144,46 @@ public class TestA extends LinearOpMode {
 //        }
         //*****************************************************************************************************************
         //Forward 500 mm
-        encoderDriveForwardorBackwards(DRIVE_SPEED,500,5);
+        robot.encoderDriveForwardorBackwards(DRIVE_SPEED,500,5);
         //Turn left
-        encoderTurn(TURN_SPEED,-150,150,5);
+        robot.encoderTurn(TURN_SPEED,-150,150,5);
         //Reverse 500 mm
-        encoderDriveForwardorBackwards(DRIVE_SPEED,-500,5);
+        //encoderDriveForwardorBackwards(DRIVE_SPEED,-500,5);
 
         //Turn right
-        encoderTurn(TURN_SPEED,150,-+150,5);
+        //encoderTurn(TURN_SPEED,150,-+150,5);
         //Forward 500 mm
-        encoderDriveForwardorBackwards(DRIVE_SPEED,250,5);
+        //encoderDriveForwardorBackwards(DRIVE_SPEED,250,5);
 
         //Drop the Beacon
-        dropBeacon(5);
+        //dropBeacon(5);
+        robot.DropBeacon(5);
 
 
         //turn left again (90 Degrees Left)
-        encoderTurn(TURN_SPEED,-450,450,5);
-
-        encoderDriveForwardorBackwards(DRIVE_SPEED,250,5);
-
-        //Turn 90 Degrees Right
-        encoderTurn(TURN_SPEED,450,-450,5);
-
-        //Forward 500 mm
-        encoderDriveForwardorBackwards(DRIVE_SPEED,1000,5);
-
-        //This moves it about a Third down, experiment to get the full extend
-        encoderMoveLift(-2000,0.5,2);
+//        encoderTurn(TURN_SPEED,-450,450,5);
+//
+//        encoderDriveForwardorBackwards(DRIVE_SPEED,250,5);
+//
+//        //Turn 90 Degrees Right
+//        encoderTurn(TURN_SPEED,450,-450,5);
+//
+//        //Forward 500 mm
+//        encoderDriveForwardorBackwards(DRIVE_SPEED,1000,5);
 
         //This moves it about a Third down, experiment to get the full extend
-        encoderExtender(-2000,0.5,3);
-
-        encoderMoveLift(2000,0.5,2);
-
-        encoderExtender(2000,0.5,3);
-        //Sideways 500mm right
-        encoderStrafe(STRAFE_SPEED, 500, -500, 5);
-        //Sideways 1000mm left
-        encoderStrafe(STRAFE_SPEED, -1000, 1000, 5);
+//        encoderMoveLift(-2000,0.5,2);
+//
+//        //This moves it about a Third down, experiment to get the full extend
+//        encoderExtender(-2000,0.5,3);
+//
+//        encoderMoveLift(2000,0.5,2);
+//
+//        encoderExtender(2000,0.5,3);
+//        //Sideways 500mm right
+//        encoderStrafe(STRAFE_SPEED, 500, -500, 5);
+//        //Sideways 1000mm left
+//        encoderStrafe(STRAFE_SPEED, -1000, 1000, 5);
 
 
         telemetry.addData("Path", "Complete");

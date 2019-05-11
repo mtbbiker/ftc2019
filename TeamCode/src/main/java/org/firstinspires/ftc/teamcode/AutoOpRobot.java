@@ -113,9 +113,10 @@ public class AutoOpRobot extends LinearOpMode {
         motorExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         dropBeaconServo = masterConfig.servo.get("DropBeaconServo");
-        //dropBeaconServo.setPosition(0.5);
 
-        webcamName = masterConfig.get(WebcamName.class, "Webcam 1");
+        dropBeaconServo.setPosition(0.5);
+
+        //webcamName = masterConfig.get(WebcamName.class, "Webcam 1");
 
                 //robottelemetry.addData("Motor Config added:" ,"Value: ");
 
@@ -130,10 +131,18 @@ public class AutoOpRobot extends LinearOpMode {
 
         imu.initialize(parameters);
 
-
+        while (!isStopRequested() && !imu.isGyroCalibrated())
+        {
+            sleep(150);
+            idle();
+        }
         // Get a reference to a Modern Robotics gyro object. We use several interfaces
         // on this object to illustrate which interfaces support which functionality.
         //modernRoboticsI2cGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
+    }
+
+    public void initCamera(){
+        webcamName = masterConfig.get(WebcamName.class, "Webcam 1");
     }
 
     public Telemetry getRobottelemetry() {
@@ -301,51 +310,159 @@ public class AutoOpRobot extends LinearOpMode {
         }
     }
 
-    /**
-     * This Method will incrementaly turn the Robot untill the Giro tells it to stop
-     * @param speed speed for motors
-     * @param heading Degrees the robot must turn relative to last position
-     * @param timeoutS Timeout
-     */
-    public void imuTurn(double speed, double heading, double timeoutS){
-        // Ensure that the opmode is still active
-        // reset the timeout time and start motion.
-        runtime.reset();
-        //Reset imu Global heading to start with a relative zero heading
-        resetAngle();
+//    /**
+//     * This Method will incrementaly turn the Robot untill the Giro tells it to stop
+//     * @param speed speed for motors
+//     * @param heading Degrees the robot must turn relative to last position
+//     * @param timeoutS Timeout
+//     */
+//    public void imuTurn(double speed, double heading, double timeoutS){
+//        // Ensure that the opmode is still active
+//        // reset the timeout time and start motion.
+//        runtime.reset();
+//        //Reset imu Global heading to start with a relative zero heading
+//        resetAngle();
+//
+//        if (opModeIsActive()) {
+//            //We use Tank Drive in all 4 wheels, so make sure we sent the correct signals to both Left and Right wheels
+//            // Determine new target position, and pass to motor controller
+//           // keep looping while we are still active, and there is time left, and both motors are running.
+//            //We use the IMU here to turn untill heading is reached
+//            while (opModeIsActive() && runtime.seconds() < timeoutS && getAngles().firstAngle <= heading)
+//            {
+//                // Display it for the Debugging.
+//                robottelemetry.addData("Heading",  "Running to Target Heading %7d ", formatAngle(angles.angleUnit, angles.firstAngle));
+//                robottelemetry.update();
+//                if(angles.firstAngle<heading)
+//                {
+//                    //Turn left
+//                    motorLeftFront.setPower(-speed);
+//                    motorLeftRear.setPower(-speed);
+//
+//                    motorRightFront.setPower(speed);
+//                    motorRightRear.setPower(speed);
+//                }
+//                else
+//                {
+//                    //Turn Right
+//                    motorLeftFront.setPower(speed);
+//                    motorLeftRear.setPower(speed);
+//
+//                    motorRightFront.setPower(-speed);
+//                    motorRightRear.setPower(-speed);
+//                }
+//            }
+//
+//            robottelemetry.addData("Power Reset","Power set to 0");
+//            robottelemetry.update();
+//            // Stop all motion after Path is completed;
+//            motorLeftFront.setPower(0);
+//            motorLeftRear.setPower(0);
+//
+//            motorRightFront.setPower(0);
+//            motorRightRear.setPower(0);
+//            // Turn off RUN_TO_POSITION
+//            motorLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            motorRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//            motorLeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            motorRightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            //Reset Again
+//            resetAngle();
+//        }
+//    }
 
+    private void disableEncoders(){
+        motorLeftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorRightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        motorLeftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorRightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    private void enableEncoders(){
+        motorLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        motorLeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorRightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    private void enableRunToPosition(){
+        motorLeftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorLeftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorRightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorRightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    /**
+     * @param power Setting to set Robot speed, double from 0 -1
+     * @param distanceMM distance in mm to move
+     * @param timeoutS Safety Timout
+     */
+    public void imuDriveStraight(double power, int distanceMM, double timeoutS){
+
+        int newLeftFrontTarget;
+        int newLeftRearTarget;
+        int newRightFrontTarget;
+        int newRightRearTarget;
+
+        // Ensure that the opmode is still active
         if (opModeIsActive()) {
+
+            robottelemetry.addData("1 imu heading", lastAngles.firstAngle);
+            robottelemetry.addData("2 correction", correction);
+            robottelemetry.update();
+
+            //leftMotor.setPower(power - correction);
+            //rightMotor.setPower(power + correction);
+
             //We use Tank Drive in all 4 wheels, so make sure we sent the correct signals to both Left and Right wheels
             // Determine new target position, and pass to motor controller
-           // keep looping while we are still active, and there is time left, and both motors are running.
-            //We use the IMU here to turn untill heading is reached
-            while (opModeIsActive() && runtime.seconds() < timeoutS && getAngles().firstAngle <= heading)
+            newLeftFrontTarget = motorLeftFront.getCurrentPosition() + (int)(distanceMM * COUNTS_PER_MM);
+            newLeftRearTarget = motorLeftRear.getCurrentPosition() + (int)(distanceMM * COUNTS_PER_MM);
+            newRightFrontTarget = motorRightFront.getCurrentPosition() + (int)(distanceMM * COUNTS_PER_MM);
+            newRightRearTarget = motorRightRear.getCurrentPosition() + (int)(distanceMM * COUNTS_PER_MM);
+
+            motorLeftFront.setTargetPosition(newLeftFrontTarget);
+            motorLeftRear.setTargetPosition(newLeftRearTarget);
+            motorRightFront.setTargetPosition(newRightFrontTarget);
+            motorRightRear.setTargetPosition(newRightRearTarget);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            //Left
+            motorLeftFront.setPower(Math.abs(power ));
+            motorLeftRear.setPower(Math.abs(power));
+            //Right
+            motorRightFront.setPower(Math.abs(power));
+            motorRightRear.setPower(Math.abs(power));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits, we should monitor ALL 4
+            //but assume for noe only 2 or monitor 2
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH (actually all 4)  motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+
+            //Only monitor the Back wheels
+            while (opModeIsActive() && (runtime.seconds() < timeoutS) &&  (motorLeftRear.isBusy() ||  motorRightRear.isBusy()))
             {
-                // Display it for the Debugging.
-                robottelemetry.addData("Heading",  "Running to Target Heading %7d ", formatAngle(angles.angleUnit, angles.firstAngle));
+                // Use gyro to drive in a straight line.
+                correction = checkDirection();
+
+                //Get the IMU data, and apply a correction if need
+                motorLeftFront.setPower(Math.abs(power - correction));
+                motorLeftRear.setPower(Math.abs(power - correction));
+
+                motorRightFront.setPower(Math.abs(power + correction));
+                motorRightRear.setPower(Math.abs(power + correction));
+                lastResetState = curResetState;
+                robottelemetry.addData("Path1",  "Running to Target LF,LR, RF, RR %7d :%7d :%7d :%7d", newLeftFrontTarget,  newLeftRearTarget, newRightFrontTarget,newRightRearTarget);
                 robottelemetry.update();
-                if(angles.firstAngle<heading)
-                {
-                    //Turn left
-                    motorLeftFront.setPower(-speed);
-                    motorLeftRear.setPower(-speed);
-
-                    motorRightFront.setPower(speed);
-                    motorRightRear.setPower(speed);
-                }
-                else
-                {
-                    //Turn Right
-                    motorLeftFront.setPower(speed);
-                    motorLeftRear.setPower(speed);
-
-                    motorRightFront.setPower(-speed);
-                    motorRightRear.setPower(-speed);
-                }
             }
 
-            robottelemetry.addData("Power Reset","Power set to 0");
-            robottelemetry.update();
             // Stop all motion after Path is completed;
             motorLeftFront.setPower(0);
             motorLeftRear.setPower(0);
@@ -353,14 +470,9 @@ public class AutoOpRobot extends LinearOpMode {
             motorRightFront.setPower(0);
             motorRightRear.setPower(0);
             // Turn off RUN_TO_POSITION
-            motorLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            motorRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            motorLeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            motorRightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            //Reset Again
-            resetAngle();
+            enableEncoders();
         }
+
     }
 
     public void encoderTurn(double speed, double leftMMdistance, double rightMMdistance, double timeoutS){
@@ -384,10 +496,7 @@ public class AutoOpRobot extends LinearOpMode {
             motorRightRear.setTargetPosition(newRightRearTarget);
 
             // Turn On RUN_TO_POSITION
-            motorLeftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motorLeftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motorRightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motorRightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            enableRunToPosition();
 
             // reset the timeout time and start motion.
             runtime.reset();
@@ -416,11 +525,7 @@ public class AutoOpRobot extends LinearOpMode {
             motorRightFront.setPower(0);
             motorRightRear.setPower(0);
             // Turn off RUN_TO_POSITION
-            motorLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            motorRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            motorLeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            motorRightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            enableEncoders();
         }
     }
 
@@ -430,6 +535,7 @@ public class AutoOpRobot extends LinearOpMode {
      */
     public void rotate(int degrees, double power)
     {
+        disableEncoders();
         double  leftPower, rightPower;
 
         // restart imu movement tracking.
@@ -960,6 +1066,11 @@ public class AutoOpRobot extends LinearOpMode {
         globalAngle += deltaAngle;
 
         lastAngles = angles;
+
+        robottelemetry.addData("Heading R-", formatAngle(lastAngles.angleUnit, lastAngles.firstAngle));
+        robottelemetry.addData("Roll L+", formatAngle(lastAngles.angleUnit, lastAngles.secondAngle));
+        robottelemetry.addData("Pitch U-", formatAngle(lastAngles.angleUnit, lastAngles.thirdAngle));
+        robottelemetry.addData("Global Heading", formatAngle(lastAngles.angleUnit, globalAngle));
 
         return globalAngle;
     }

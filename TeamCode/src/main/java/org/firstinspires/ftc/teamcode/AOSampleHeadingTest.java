@@ -76,7 +76,7 @@ public class AOSampleHeadingTest extends LinearOpMode {
                 tfod.activate();
             }
 
-            while (opModeIsActive()) {
+//            while (opModeIsActive()) {
                 if (tfod != null) {
                     //Scan for Targets
                     // getUpdatedRecognitions() will return null if no new information is available since
@@ -197,7 +197,7 @@ public class AOSampleHeadingTest extends LinearOpMode {
                         telemetry.update();
                     }
                 }
-            }
+//            }
         }
         //Shutdown to release resources
         if (tfod != null) {
