@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigationWebcam;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -75,6 +76,7 @@ public class AOSampleHeadingTest extends LinearOpMode {
             waitForStart();
             robot.setRobottelemetry(telemetry);
             robot.start();
+            //unhitchRobot();
 
             if (opModeIsActive()) {
                 /** Activate Tensor Flow Object Detection. */
@@ -203,7 +205,8 @@ public class AOSampleHeadingTest extends LinearOpMode {
 //                }
 
                 while (opModeIsActive()) {
-                    if (tfod != null) {
+
+                    if (tfod != null && !sampledetected) {
                         //Scan for Targets
                         // getUpdatedRecognitions() will return null if no new information is available since
                         // the last time that call was made.
@@ -270,6 +273,7 @@ public class AOSampleHeadingTest extends LinearOpMode {
                                         sampledetected = true;
                                     }
                                 }
+                                //Calculated guess that Gold is far right
                                 if (goldMineralX == -1 && silverMineral1X != -1 && silverMineral2X != -1) {
 
                                     telemetry.addData("Gold Mineral Position", "Right: " + goldMineralX);
@@ -287,16 +291,13 @@ public class AOSampleHeadingTest extends LinearOpMode {
                         //robot.rotate(-1 * (int) Math.round(detected.targetHeading), 0.5);
                         //robot.SampleMineral(); //Lower Lift and start Collector
                         //robot.imuDriveStraight(0.3,250,3);
-                        sleep(2000);
                     }
                 }
-
-                if (tfod != null) {
-                    tfod.shutdown();
-                }
-
             }
             //Shutdown to release resources
+            if (tfod != null) {
+                tfod.shutdown();
+            }
         }
         catch (Exception ex){
             telemetry.addData("Exception ", ex.getMessage());
@@ -348,6 +349,22 @@ public class AOSampleHeadingTest extends LinearOpMode {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
         //Object Tracker is by default on
         //tfodParameters.useObjectTracker = true;
+    }
+
+    public void unhitchRobot() {
+        //Take xtra care of encoder settings, like RUN_TO_POSITION, if you need to keep track of positions in every step
+        robot.motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.motorExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        robot.motorLeftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.motorLeftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.motorRightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.motorRightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //Lift and extend
+        telemetry.addLine("Start Lowering the Robot");
+        telemetry.update();
+        robot.lower(); // See the changes to keep track of position
+        telemetry.update();
     }
 }
 

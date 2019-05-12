@@ -59,13 +59,15 @@ public class ExampleTFWebCam extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
-        if (opModeIsActive()) {
+        if (opModeIsActive())
+        {
             /** Activate Tensor Flow Object Detection. */
             if (tfod != null) {
                 tfod.activate();
             }
 
-            while (opModeIsActive()) {
+            while (opModeIsActive())
+            {
                 if (tfod != null) {
                     //Scan for Targets
                     // getUpdatedRecognitions() will return null if no new information is available since
