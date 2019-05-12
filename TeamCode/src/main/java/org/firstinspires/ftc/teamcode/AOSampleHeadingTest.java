@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
+import java.util.Locale;
 
 //This Class is a Test to use TF to get a Heading and then Sample based on feedback from the IMU
 //@Disabled
@@ -35,7 +36,7 @@ public class AOSampleHeadingTest extends LinearOpMode {
      * This is the webcam we are to use. As with other hardware devices such as motors and
      * servos, this device is identified using the robot configuration tool in the FTC application.
      */
-    //WebcamName webcamName;
+    WebcamName webcamName;
 
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
@@ -47,185 +48,269 @@ public class AOSampleHeadingTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        robot.init(hardwareMap);
+        try{
+            robot.init(hardwareMap);
 
-        telemetry.addData(">", "Press Play to start tracking");
-        telemetry.update();
-        /*
-         * Retrieve the camera we are to use.
-         */
-        //webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
-        robot.initCamera();
+            telemetry.addData(">", "Press Play to start tracking");
+            telemetry.update();
+            /*
+             * Retrieve the camera we are to use.
+             */
+            webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
+            //robot.initCamera();
 
-        initVuforia();
-        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
-            initTfod();
-        } else {
-            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
-        }
-
-        telemetry.addData(">", "Press Play to start");
-        telemetry.update();
-
-        waitForStart();
-        robot.setRobottelemetry(telemetry);
-        robot.start();
-
-        if (opModeIsActive()) {
-            /** Activate Tensor Flow Object Detection. */
-            if (tfod != null) {
-                tfod.activate();
+            initVuforia();
+            //sleep(1000);
+            if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
+                initTfod();
+            } else {
+                telemetry.addData("Sorry!", "This device is not compatible with TFOD");
             }
-            //Deploy
-            //robot.lower();
-            robot.callibrateGyro();
+
             MineralDetected detected = new MineralDetected();
 
-            if (tfod != null) {
-                    //Scan for Targets
-                    // getUpdatedRecognitions() will return null if no new information is available since
-                    // the last time that call was made.
-                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+            telemetry.addData(">", "Press Play to start");
+            telemetry.update();
 
-                    if (updatedRecognitions != null) {
-                        telemetry.addData("# Object Detected", updatedRecognitions.size());
-                        //**************************************************************************************************************************
-                        //***************** Note: Camera mounted left on the Robot, only the left 2 minerals might be in View
-                        if (updatedRecognitions.size() >= 2){
-                            //If both are Silver, then Gold must be out of view to the Right
-                            int silverfound = 0;
-                            int goldMineralX = -1;
-                            int silverMineral1X = -1;
-                            int silverMineral2X = -1;
-                            double targetHeading = 0;
-                            boolean targetfound = false;
-                            for (Recognition recognition : updatedRecognitions) {
-                                if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                    goldMineralX = (int) recognition.getLeft();
-                                    telemetry.addData("Gold Mineral Detected: ","Sample Gold detected "  +goldMineralX);
-                                    targetHeading = recognition.estimateAngleToObject(AngleUnit.DEGREES);
+            waitForStart();
+            robot.setRobottelemetry(telemetry);
+            robot.start();
 
-                                    detected.targetHeading = targetHeading;
-                                } else if (silverMineral1X == -1) {
-                                    silverMineral1X = (int) recognition.getLeft();
-                                    telemetry.addData("Silver Mineral Detected: ","Sample 1");
-                                    silverfound = silverfound + 1 ;
-                                } else {
-                                    silverMineral2X = (int) recognition.getLeft();
-                                    telemetry.addData("Silver Mineral Detected: ","Sample 2");
-                                    silverfound = silverfound + 1 ;
-                                }
-                            }
-                            //Additional angle needs to be added for each option to only target Gold
-                            if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
-                                if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
-                                    telemetry.addData("Gold Mineral Position", "Left: " + goldMineralX);
-                                    //Asume move will block and complete and TF interupted
-                                    //moveLeft(targetHeading);
-                                    telemetry.addData("Estimate Horizontal Angle to Object:", "Angle: " + targetHeading);
-                                    //telemetry.addData("Estimate Distance to Object:", "Distance: " + recognition.);
-                                    //robot.imuTurn(1,targetHeading,3);
-                                    if(!targetfound) {
-                                        targetfound=true;
-                                        telemetry.addData("Target found Object:", "Angle: " + robot.getAngle());
+            if (opModeIsActive()) {
+                /** Activate Tensor Flow Object Detection. */
+                boolean targetfound = false;
+                if (tfod != null) {
+                    tfod.activate();
+                }
+                boolean sampledetected =false;
+//                while (!targetfound){
+//
+//                    if (tfod != null) {
+//                        //Scan for Targets
+//                        // getUpdatedRecognitions() will return null if no new information is available since
+//                        // the last time that call was made.
+//                        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+//
+//                        if (updatedRecognitions != null) {
+//                            telemetry.addData("# Object Detected", updatedRecognitions.size());
+//                            //**************************************************************************************************************************
+//                            //***************** Note: Camera mounted left on the Robot, only the left 2 minerals might be in View
+//                            if (updatedRecognitions.size() >= 2){
+//                                //If both are Silver, then Gold must be out of view to the Right
+//                                int silverfound = 0;
+//                                int goldMineralX = -1;
+//                                int silverMineral1X = -1;
+//                                int silverMineral2X = -1;
+//                                double targetHeading = 0;
+//
+//                                for (Recognition recognition : updatedRecognitions) {
+//                                    if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+//                                        goldMineralX = (int) recognition.getLeft();
+//                                        telemetry.addData("Gold Mineral Detected: ","Sample Gold detected "  +goldMineralX);
+//                                        targetHeading = recognition.estimateAngleToObject(AngleUnit.DEGREES);
+//                                        detected.targetHeading = targetHeading;
+//                                        targetfound=true;
+//                                    } else if (silverMineral1X == -1) {
+//                                        silverMineral1X = (int) recognition.getLeft();
+//                                        telemetry.addData("Silver Mineral Detected: ","Sample 1");
+//                                        silverfound = silverfound + 1 ;
+//                                    } else {
+//                                        silverMineral2X = (int) recognition.getLeft();
+//                                        telemetry.addData("Silver Mineral Detected: ","Sample 2");
+//                                        silverfound = silverfound + 1 ;
+//                                    }
+//                                }
+//                                //Additional angle needs to be added for each option to only target Gold
+//                                if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1)
+//                                {
+//                                    if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
+//                                        telemetry.addData("Gold Mineral Position", "Left: " + goldMineralX);
+//                                        //Asume move will block and complete and TF interupted
+//                                        //moveLeft(targetHeading);
+//                                        telemetry.addData("Estimate Horizontal Angle to Object:", "Angle: " + targetHeading);
+//                                        //telemetry.addData("Estimate Distance to Object:", "Distance: " + recognition.);
+//                                        //robot.imuTurn(1,targetHeading,3);
+//                                        targetfound=true;
+//                                        telemetry.addData("Target found Object:", "Angle: " + robot.getAngle());
+//                                        detected.position = MineralPosition.LEFT;
+//                                    }
+//                                    else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X)
+//                                    {
+//                                        telemetry.addData("Gold Mineral Position", "Right: " + goldMineralX);
+//                                        detected.position = MineralPosition.RIGHT;
+//                                        targetfound=true;
+//                                    }
+//                                    else
+//                                    {
+//                                        telemetry.addData("Gold Mineral Position", "Center: " + goldMineralX);
+//                                        detected.position = MineralPosition.CENTER;
+//                                        targetfound=true;
+//                                    }
+//                                }
+//                                if (goldMineralX == -1 && silverfound ==2){
+//                                    telemetry.addData("Gold Mineral Position", "Right: " + goldMineralX +" Silver: " + silverfound) ;
+//                                    targetfound=true;
+//                                }
+//                            }
+//                            telemetry.update();
+//                            if (updatedRecognitions.size() > 2) {
+//
+//                                int goldMineralX = -1;
+//                                int silverMineral1X = -1;
+//                                int silverMineral2X = -1;
+//                                double targetHeading = 0;
+//
+//                                for (Recognition recognition : updatedRecognitions) {
+//                                    if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+//                                        goldMineralX = (int) recognition.getLeft();
+//                                        telemetry.addData("Gold Mineral Detected: ","Sample Gold detected "  +goldMineralX);
+//                                        targetHeading = recognition.estimateAngleToObject(AngleUnit.DEGREES);
+//                                        detected.targetHeading = targetHeading;
+//                                        targetfound=true;
+//
+//                                    } else if (silverMineral1X == -1) {
+//                                        silverMineral1X = (int) recognition.getLeft();
+//                                        telemetry.addData("Silver Mineral Detected: ","Sample 1");
+//                                    } else {
+//                                        silverMineral2X = (int) recognition.getLeft();
+//                                        telemetry.addData("Silver Mineral Detected: ","Sample 2");
+//                                    }
+//                                }
+//                                //Additional angle needs to be added for each option to only target Gold
+//                                if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
+//                                    if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
+//                                        telemetry.addData("Gold Mineral Position", "Left: " + goldMineralX);
+//                                        //Asume move will block and complete and TF interupted
+//                                        telemetry.addData("Estimate Horizontal Angle to Object:", "Angle: " + targetHeading);
+//                                        telemetry.addData("Target found Object:", "Angle: " + robot.getAngle());
+//                                        detected.position = MineralPosition.LEFT;
+//                                        targetfound = true;
+//                                    } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
+//                                        telemetry.addData("Gold Mineral Position", "Right: " + goldMineralX);
+//                                        detected.position = MineralPosition.RIGHT;
+//                                        targetfound=true;
+//                                    } else {
+//                                        telemetry.addData("Gold Mineral Position", "Center: " + goldMineralX);
+//                                        detected.position = MineralPosition.CENTER;
+//                                        targetfound=true;
+//                                    }
+//                                }
+//                            }
+//                            telemetry.update();
+//                        }
+//                        //Now Go and drop Beacon or Drive to Crator, See OpModes
+//                    }
+//                }
 
-                                        detected.position = MineralPosition.LEFT;
-
-//                                        robot.rotate(-1 * (int) Math.round(targetHeading), 0.5);
+                while (opModeIsActive()) {
+                    if (tfod != null) {
+                        //Scan for Targets
+                        // getUpdatedRecognitions() will return null if no new information is available since
+                        // the last time that call was made.
+                        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                        if (updatedRecognitions != null) {
+                            telemetry.addData("# Object Detected", updatedRecognitions.size());
+                            if (updatedRecognitions.size() >= 2) {
+                                int goldMineralX = -1;
+                                int silverMineral1X = -1;
+                                int silverMineral2X = -1;
+                                double targetHeading = 0;
+                                for (Recognition recognition : updatedRecognitions) {
+                                    if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                        goldMineralX = (int) recognition.getLeft();
+                                        telemetry.addData("Gold Mineral Detected: ","Sample Gold detected "  +goldMineralX);
+                                        telemetry.addData("Estimate Horizontal Angle to Object:", "Angle: " + formatDegrees(recognition.estimateAngleToObject(AngleUnit.DEGREES)));
+                                        //telemetry.addData("Estimate Distance to Object:", "Distance: " + recognition.);
+                                        targetHeading = recognition.estimateAngleToObject(AngleUnit.DEGREES);
+                                        silverMineral2X = 600;
+                                    } else if (silverMineral1X == -1) {
+                                        silverMineral1X = (int) recognition.getLeft();
+                                        telemetry.addData("Silver Mineral Detected: ","Sample 1");
+                                    } else {
+                                        silverMineral2X = (int) recognition.getLeft();
+                                        telemetry.addData("Silver Mineral Detected: ","Sample 2");
                                     }
-                                    //Sample
-                                    //Drop beacon
-                                    //Move to crater
-                                    //Stop
                                 }
-                                else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X)
-                                {
-                                    telemetry.addData("Gold Mineral Position", "Right: " + goldMineralX);
-                                    detected.position = MineralPosition.RIGHT;
-                                }
-                                else
-                                {
-                                    telemetry.addData("Gold Mineral Position", "Center: " + goldMineralX);
-                                    detected.position = MineralPosition.CENTER;
-                                }
-                            }
-                            if (goldMineralX == -1 && silverfound ==2){
-                                telemetry.addData("Gold Mineral Position", "Right: " + goldMineralX +" Silver: " + silverfound) ;
-                            }
-                        }
-                        telemetry.update();
-                        if (updatedRecognitions.size() > 2) {
-
-                            int goldMineralX = -1;
-                            int silverMineral1X = -1;
-                            int silverMineral2X = -1;
-                            double targetHeading = 0;
-                            boolean targetfound = false;
-                            for (Recognition recognition : updatedRecognitions) {
-                                if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                    goldMineralX = (int) recognition.getLeft();
-                                    telemetry.addData("Gold Mineral Detected: ","Sample Gold detected "  +goldMineralX);
-                                    targetHeading = recognition.estimateAngleToObject(AngleUnit.DEGREES);
-                                    detected.targetHeading = targetHeading;
-
-                                } else if (silverMineral1X == -1) {
-                                    silverMineral1X = (int) recognition.getLeft();
-                                    telemetry.addData("Silver Mineral Detected: ","Sample 1");
-                                } else {
-                                    silverMineral2X = (int) recognition.getLeft();
-                                    telemetry.addData("Silver Mineral Detected: ","Sample 2");
-                                }
-                            }
-                            //Additional angle needs to be added for each option to only target Gold
-                            if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
-                                if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
-                                    telemetry.addData("Gold Mineral Position", "Left: " + goldMineralX);
-                                    //Asume move will block and complete and TF interupted
-                                    //moveLeft(targetHeading);
-                                    telemetry.addData("Estimate Horizontal Angle to Object:", "Angle: " + targetHeading);
-                                    //telemetry.addData("Estimate Distance to Object:", "Distance: " + recognition.);
-                                    //robot.imuTurn(1,targetHeading,3);
-                                    if(!targetfound) {
-
-                                        telemetry.addData("Target found Object:", "Angle: " + robot.getAngle());
-                                        targetfound=true;
-                                        //robot.rotate(-1 * (int) Math.round(targetHeading), 0.5);
+                                if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
+                                    if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
+                                        telemetry.addData("Gold Mineral Position", "Left: " + goldMineralX);
+                                        //Asume move will block and complete and TF interupted
+                                        //moveLeft(targetHeading);
+                                        detected.targetHeading = targetHeading;
                                         detected.position = MineralPosition.LEFT;
+                                        sampledetected = true;
+                                    } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
+                                        telemetry.addData("Gold Mineral Position", "Right: " + goldMineralX);
+                                        //moveRight(targetHeading);
+                                        detected.targetHeading = targetHeading;
+                                        detected.position = MineralPosition.RIGHT;
+                                        sampledetected = true;
+                                    } else {
+                                        telemetry.addData("Gold Mineral Position", "Center: " + goldMineralX);
+                                        //moveMid(targetHeading);
+                                        detected.targetHeading = targetHeading;
+                                        detected.position = MineralPosition.CENTER;
+                                        sampledetected = true;
                                     }
-                                    //Sample
-                                    //Drop beacon
-                                    //Move to crater
-                                    //Stop
-                                } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
+                                }
+                                //We can't detect the far right
+                                if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X == -1) {
+                                    if (goldMineralX < silverMineral1X) {
+                                        telemetry.addData("Gold Mineral Position", "Left: " + goldMineralX);
+                                        //Asume move will block and complete and TF interupted
+                                        //moveLeft(targetHeading);
+                                        detected.targetHeading = targetHeading;
+                                        detected.position = MineralPosition.LEFT;
+                                        sampledetected = true;
+                                    } else if (goldMineralX > silverMineral1X) {
+                                        telemetry.addData("Gold Mineral Position", "Center: " + goldMineralX);
+                                        //moveRight(targetHeading);
+                                        detected.targetHeading = targetHeading;
+                                        detected.position = MineralPosition.RIGHT;
+                                        sampledetected = true;
+                                    }
+                                }
+                                if (goldMineralX == -1 && silverMineral1X != -1 && silverMineral2X != -1) {
+
                                     telemetry.addData("Gold Mineral Position", "Right: " + goldMineralX);
+                                    detected.targetHeading = 22;
                                     detected.position = MineralPosition.RIGHT;
-                                } else {
-                                    telemetry.addData("Gold Mineral Position", "Center: " + goldMineralX);
-                                    detected.position = MineralPosition.CENTER;
+                                    sampledetected = true;
                                 }
                             }
+                            telemetry.update();
                         }
-                        telemetry.update();
                     }
 
-
-
-                    //Now Go and drop Beacon or Drive to Crator, See OpModes
+                    if(sampledetected){
+                        telemetry.addData("Moving!", "H,P:(" + detected.targetHeading + "),(" + detected.position + ")");
+                        //robot.rotate(-1 * (int) Math.round(detected.targetHeading), 0.5);
+                        //robot.SampleMineral(); //Lower Lift and start Collector
+                        //robot.imuDriveStraight(0.3,250,3);
+                        sleep(2000);
+                    }
                 }
 
+                if (tfod != null) {
+                    tfod.shutdown();
+                }
+
+            }
+            //Shutdown to release resources
+        }
+        catch (Exception ex){
+            telemetry.addData("Exception ", ex.getMessage());
             if (tfod != null) {
                 tfod.shutdown();
             }
-            if(detected.targetHeading >= 0){
-                telemetry.addData("Moving!", "H,P:(" + detected.targetHeading + "),(" + detected.position + ")");
-                robot.rotate(-1 * (int) Math.round(detected.targetHeading), 0.5);
-                robot.SampleMineral(); //Lower Lift and start Collector
-                robot.imuDriveStraight(0.3,250,3);
-            }
         }
-        //Shutdown to release resources
+
     }
 
+    String formatDegrees(double degrees)
+    {
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+    }
     private void initVuforia() {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
@@ -245,7 +330,7 @@ public class AOSampleHeadingTest extends LinearOpMode {
          * We also indicate which camera on the RC we wish to use. For pedagogical purposes,
          * we use the same logic as in {@link ConceptVuforiaNavigationWebcam}.
          */
-        parameters.cameraName = robot.getWebcamName();
+        parameters.cameraName = webcamName;
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
         // Loading trackables is not necessary for the Tensor Flow Object Detection engine.
@@ -271,7 +356,7 @@ enum MineralPosition {
 }
 class MineralDetected{
 
-    double targetHeading = 0;
+    double targetHeading;
 
     double distance;
 

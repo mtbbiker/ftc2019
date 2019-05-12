@@ -52,7 +52,7 @@ public class AutoOpRobot extends LinearOpMode {
     boolean lastResetState = false;
     boolean curResetState  = false;
 
-    private WebcamName webcamName;
+    //private WebcamName webcamName;
 
     private BNO055IMU imu;
 
@@ -141,9 +141,9 @@ public class AutoOpRobot extends LinearOpMode {
         //modernRoboticsI2cGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
     }
 
-    public void initCamera(){
-        webcamName = masterConfig.get(WebcamName.class, "Webcam 1");
-    }
+//    public void initCamera(){
+//        webcamName = masterConfig.get(WebcamName.class, "Webcam 1");
+//    }
 
     public Telemetry getRobottelemetry() {
         return robottelemetry;
@@ -383,9 +383,9 @@ public class AutoOpRobot extends LinearOpMode {
 ////        }
 //    }
 
-    public void SampleMineral(){
-        encoderMoveLift(-2000, 1, 5);
-        encoderExtender(-2600, 1, 5);
+    public void sampleMineral(){
+        encoderMoveLift(2000, 1, 5);
+        encoderExtender(-260, 1, 5);
         motorCollect.setPower(0.8);
 //        encoderMoveLift(3100, 1, 5);
 //        motorCollect.setPower(0);
@@ -1141,11 +1141,11 @@ public class AutoOpRobot extends LinearOpMode {
         this.gravity = gravity;
     }
 
-    public WebcamName getWebcamName() {
-        return webcamName;
-    }
-
-    public void setWebcamName(WebcamName webcamName) {
-        this.webcamName = webcamName;
-    }
+//    public WebcamName getWebcamName() {
+//        return webcamName;
+//    }
+//
+//    public void setWebcamName(WebcamName webcamName) {
+//        this.webcamName = webcamName;
+//    }
 }

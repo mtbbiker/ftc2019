@@ -75,7 +75,7 @@ public class ExampleGiro extends LinearOpMode {
             //Assume the Sample heading was detected as 0.0 (Drive straight forward)
             telemetry.addData(">Active<", "Turning");
 
-            //robot.imuTurn(0.5,17,3);
+            robot.rotate(12, 0.5);
             telemetry.addData("Turning, ", "Direction 22 degrees" );
             telemetry.update();
 
