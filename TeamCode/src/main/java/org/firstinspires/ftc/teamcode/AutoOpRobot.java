@@ -373,6 +373,23 @@ public class AutoOpRobot extends LinearOpMode {
 //            resetAngle();
 //        }
 //    }
+//    public void driveCollector(boolean collect, double speed){
+////        public void Sample(){
+////            encoderMoveLift(-2000, 1, 5);
+////            encoderExtender(-2600, 1, 5);
+////            motorCollect.setPower(0.8);
+////            encoderMoveLift(3100, 1, 5);
+////            motorCollect.setPower(0);
+////        }
+//    }
+
+    public void SampleMineral(){
+        encoderMoveLift(-2000, 1, 5);
+        encoderExtender(-2600, 1, 5);
+        motorCollect.setPower(0.8);
+//        encoderMoveLift(3100, 1, 5);
+//        motorCollect.setPower(0);
+    }
 
     private void disableEncoders(){
         motorLeftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -632,7 +649,7 @@ public class AutoOpRobot extends LinearOpMode {
     }
 
     //Use the Rev4wheel Telop to get the Values for various positions
-    private void encoderMoveLift(int position, double speed,double timeoutS)
+    public void encoderMoveLift(int position, double speed,double timeoutS)
     {
         int newLiftget;
 
@@ -676,7 +693,7 @@ public class AutoOpRobot extends LinearOpMode {
     }
 
     //Use the Rev4wheel Telop to get the Values for various positions
-    private void encoderExtender(int position,double speed, double timeoutS)
+    public void encoderExtender(int position,double speed, double timeoutS)
     {
         int newExtendget;
 
@@ -859,25 +876,25 @@ public class AutoOpRobot extends LinearOpMode {
 //        }
 //    }
 
-    public void Sample() {
-        motorRightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorLeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorLeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorRightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        double driveDistance = 100 * COUNTS_PER_MM;
-        double startPos = motorRightFront.getCurrentPosition();
-        while (motorRightFront.getCurrentPosition() < driveDistance + startPos) {
-            motorLeftFront.setPower(+1);
-            motorLeftRear.setPower(+1);
-            motorRightFront.setPower(+1);
-            motorRightRear.setPower(+1);
-            robottelemetry.addLine("Sample");
-        }
-    }
+//    public void Sample() {
+//        motorRightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        motorLeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        motorRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        motorLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        motorLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        motorRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        motorLeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        motorRightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        double driveDistance = 100 * COUNTS_PER_MM;
+//        double startPos = motorRightFront.getCurrentPosition();
+//        while (motorRightFront.getCurrentPosition() < driveDistance + startPos) {
+//            motorLeftFront.setPower(+1);
+//            motorLeftRear.setPower(+1);
+//            motorRightFront.setPower(+1);
+//            motorRightRear.setPower(+1);
+//            robottelemetry.addLine("Sample");
+//        }
+//    }
 
 //    public void ResetMid() {
 //        motorRightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

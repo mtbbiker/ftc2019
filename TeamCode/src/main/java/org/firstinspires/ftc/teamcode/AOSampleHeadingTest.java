@@ -75,6 +75,9 @@ public class AOSampleHeadingTest extends LinearOpMode {
             if (tfod != null) {
                 tfod.activate();
             }
+            //Deploy
+            //robot.lower();
+            robot.callibrateGyro();
 
 //            while (opModeIsActive()) {
                 if (tfod != null) {
@@ -82,6 +85,7 @@ public class AOSampleHeadingTest extends LinearOpMode {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                    MineralDetected detected = new MineralDetected();
                     if (updatedRecognitions != null) {
                         telemetry.addData("# Object Detected", updatedRecognitions.size());
                         //**************************************************************************************************************************
@@ -100,6 +104,7 @@ public class AOSampleHeadingTest extends LinearOpMode {
                                     telemetry.addData("Gold Mineral Detected: ","Sample Gold detected "  +goldMineralX);
                                     targetHeading = recognition.estimateAngleToObject(AngleUnit.DEGREES);
 
+                                    detected.targetHeading = targetHeading;
                                 } else if (silverMineral1X == -1) {
                                     silverMineral1X = (int) recognition.getLeft();
                                     telemetry.addData("Silver Mineral Detected: ","Sample 1");
@@ -120,10 +125,12 @@ public class AOSampleHeadingTest extends LinearOpMode {
                                     //telemetry.addData("Estimate Distance to Object:", "Distance: " + recognition.);
                                     //robot.imuTurn(1,targetHeading,3);
                                     if(!targetfound) {
-
-                                        robot.rotate(-1 * (int) Math.round(targetHeading), 0.5);
-                                        telemetry.addData("Target found Object:", "Angle: " + robot.getAngle());
                                         targetfound=true;
+                                        telemetry.addData("Target found Object:", "Angle: " + robot.getAngle());
+
+                                        detected.position = MineralPosition.LEFT;
+
+//                                        robot.rotate(-1 * (int) Math.round(targetHeading), 0.5);
                                     }
                                     //Sample
                                     //Drop beacon
@@ -133,12 +140,12 @@ public class AOSampleHeadingTest extends LinearOpMode {
                                 else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X)
                                 {
                                     telemetry.addData("Gold Mineral Position", "Right: " + goldMineralX);
-                                    //moveRight(targetHeading);
+                                    detected.position = MineralPosition.RIGHT;
                                 }
                                 else
                                 {
                                     telemetry.addData("Gold Mineral Position", "Center: " + goldMineralX);
-                                    //moveMid(targetHeading);
+                                    detected.position = MineralPosition.CENTER;
                                 }
                             }
                             if (goldMineralX == -1 && silverfound ==2){
@@ -147,6 +154,7 @@ public class AOSampleHeadingTest extends LinearOpMode {
                         }
                         telemetry.update();
                         if (updatedRecognitions.size() > 2) {
+
                             int goldMineralX = -1;
                             int silverMineral1X = -1;
                             int silverMineral2X = -1;
@@ -157,6 +165,7 @@ public class AOSampleHeadingTest extends LinearOpMode {
                                     goldMineralX = (int) recognition.getLeft();
                                     telemetry.addData("Gold Mineral Detected: ","Sample Gold detected "  +goldMineralX);
                                     targetHeading = recognition.estimateAngleToObject(AngleUnit.DEGREES);
+                                    detected.targetHeading = targetHeading;
 
                                 } else if (silverMineral1X == -1) {
                                     silverMineral1X = (int) recognition.getLeft();
@@ -177,9 +186,10 @@ public class AOSampleHeadingTest extends LinearOpMode {
                                     //robot.imuTurn(1,targetHeading,3);
                                     if(!targetfound) {
 
-                                        robot.rotate(-1 * (int) Math.round(targetHeading), 0.5);
                                         telemetry.addData("Target found Object:", "Angle: " + robot.getAngle());
                                         targetfound=true;
+                                        //robot.rotate(-1 * (int) Math.round(targetHeading), 0.5);
+                                        detected.position = MineralPosition.LEFT;
                                     }
                                     //Sample
                                     //Drop beacon
@@ -187,15 +197,24 @@ public class AOSampleHeadingTest extends LinearOpMode {
                                     //Stop
                                 } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
                                     telemetry.addData("Gold Mineral Position", "Right: " + goldMineralX);
-                                    //moveRight(targetHeading);
+                                    detected.position = MineralPosition.RIGHT;
                                 } else {
                                     telemetry.addData("Gold Mineral Position", "Center: " + goldMineralX);
-                                    //moveMid(targetHeading);
+                                    detected.position = MineralPosition.CENTER;
                                 }
                             }
                         }
                         telemetry.update();
                     }
+
+                    if(detected.targetHeading >= 0){
+                        telemetry.addData("Moving!", "H,P:(" + detected.targetHeading + "),(" + detected.position + ")");
+                        robot.rotate(-1 * (int) Math.round(detected.targetHeading), 0.5);
+                        robot.SampleMineral(); //Lower Lift and start Collector
+                        robot.imuDriveStraight(0.3,250,3);
+                    }
+
+                    //Now Go and drop Beacon or Drive to Crator, See OpModes
                 }
 //            }
         }
@@ -245,4 +264,18 @@ public class AOSampleHeadingTest extends LinearOpMode {
         //Object Tracker is by default on
         //tfodParameters.useObjectTracker = true;
     }
+}
+
+enum MineralPosition {
+    LEFT,CENTER,RIGHT
+}
+class MineralDetected{
+
+    double targetHeading = 0;
+
+    double distance;
+
+    MineralPosition position;
+
+
 }

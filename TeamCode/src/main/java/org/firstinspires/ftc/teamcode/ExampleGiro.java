@@ -24,8 +24,8 @@ import java.util.Locale;
 //@Disabled
 public class ExampleGiro extends LinearOpMode {
 
-    //AutoOpRobot robot = new AutoOpRobot();
-    CloneAutoOpRobot robot = new CloneAutoOpRobot();
+    AutoOpRobot robot = new AutoOpRobot();
+    //CloneAutoOpRobot robot = new CloneAutoOpRobot();
    // private ElapsedTime runtime = new ElapsedTime();
 
     @Override
@@ -35,23 +35,23 @@ public class ExampleGiro extends LinearOpMode {
         telemetry.addData(">", "ExampleGiro: Press Play to start tracking");
         telemetry.update();
 
-        robot.motorLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.motorLeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        robot.motorRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.motorRightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        robot.motorLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.motorExtend.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        robot.motorLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.motorLeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        robot.motorRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.motorRightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        robot.motorLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.motorExtend.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        robot.motorLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        robot.motorLeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//
+//        robot.motorRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        robot.motorRightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//
+//        robot.motorLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        robot.motorExtend.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//
+//        robot.motorLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        robot.motorLeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//        robot.motorRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        robot.motorRightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//        robot.motorLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        robot.motorExtend.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
         waitForStart();
@@ -59,11 +59,11 @@ public class ExampleGiro extends LinearOpMode {
         robot.setRobottelemetry(telemetry);
         //robot.start();
 
-        robot.motorLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.motorLeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        robot.motorRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.motorRightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        robot.motorLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        robot.motorLeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//
+//        robot.motorRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        robot.motorRightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //Initiate the Gyro
         //robot.callibrateGyro();
@@ -87,12 +87,14 @@ public class ExampleGiro extends LinearOpMode {
 
             //robot.imuDriveStraight(0.75,600,3);
             //robot.encoderDriveStraight(0.5,300,3);
-            robot.encoderDriveForwardorBackwards(0.5, 950, 7);
-            telemetry.addData("Get Position, ", "Moved 300mm");
+            robot.encoderDriveStraight(0.3, 400, 7);
+            telemetry.addData("Drive to Position with Encoder, ", "Moved 400");
             telemetry.update();
-//
-//                sleep(2000);
-//                break;
+
+        robot.imuDriveStraight(0.1, 400, 7);
+
+        telemetry.addData("Drive to Position with IMU, ", "Moved 400");
+        telemetry.update();
 //
 //            }
 //        }
