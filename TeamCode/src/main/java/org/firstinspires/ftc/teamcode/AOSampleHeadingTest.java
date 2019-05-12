@@ -35,7 +35,7 @@ public class AOSampleHeadingTest extends LinearOpMode {
      * This is the webcam we are to use. As with other hardware devices such as motors and
      * servos, this device is identified using the robot configuration tool in the FTC application.
      */
-
+    //WebcamName webcamName;
 
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
@@ -55,6 +55,7 @@ public class AOSampleHeadingTest extends LinearOpMode {
          * Retrieve the camera we are to use.
          */
         //webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
+        robot.initCamera();
 
         initVuforia();
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
@@ -78,14 +79,14 @@ public class AOSampleHeadingTest extends LinearOpMode {
             //Deploy
             //robot.lower();
             robot.callibrateGyro();
+            MineralDetected detected = new MineralDetected();
 
-//            while (opModeIsActive()) {
-                if (tfod != null) {
+            if (tfod != null) {
                     //Scan for Targets
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                    MineralDetected detected = new MineralDetected();
+
                     if (updatedRecognitions != null) {
                         telemetry.addData("# Object Detected", updatedRecognitions.size());
                         //**************************************************************************************************************************
@@ -207,23 +208,22 @@ public class AOSampleHeadingTest extends LinearOpMode {
                         telemetry.update();
                     }
 
-                    if(detected.targetHeading >= 0){
-                        telemetry.addData("Moving!", "H,P:(" + detected.targetHeading + "),(" + detected.position + ")");
-                        robot.rotate(-1 * (int) Math.round(detected.targetHeading), 0.5);
-                        robot.SampleMineral(); //Lower Lift and start Collector
-                        robot.imuDriveStraight(0.3,250,3);
-                    }
+
 
                     //Now Go and drop Beacon or Drive to Crator, See OpModes
                 }
-//            }
+
+            if (tfod != null) {
+                tfod.shutdown();
+            }
+            if(detected.targetHeading >= 0){
+                telemetry.addData("Moving!", "H,P:(" + detected.targetHeading + "),(" + detected.position + ")");
+                robot.rotate(-1 * (int) Math.round(detected.targetHeading), 0.5);
+                robot.SampleMineral(); //Lower Lift and start Collector
+                robot.imuDriveStraight(0.3,250,3);
+            }
         }
         //Shutdown to release resources
-        if (tfod != null) {
-            tfod.shutdown();
-        }
-
-
     }
 
     private void initVuforia() {
