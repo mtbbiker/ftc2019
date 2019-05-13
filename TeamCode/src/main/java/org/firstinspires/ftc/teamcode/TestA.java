@@ -132,22 +132,22 @@ public class TestA extends LinearOpMode {
         //Add the following line to Test the encoders, getting values from them
         //*****************************************************************************************************************
         //1:40 motor should do 28*40 = 1120 for full Rotation
-//        while(!isStarted){
-//            telemetry.addData("Test Counts for debugging",  "Running at LF,LR,RF,RR,LIFT,EXT\",  \"Starting at %7d :%7d: %7d :%7d %7d :%7d\"",
-//                    robot.motorLeftFront.getCurrentPosition(),
-//                    robot.motorRightFront.getCurrentPosition(),
-//                    robot.motorLeftRear.getCurrentPosition(),
-//                    robot.motorRightRear.getCurrentPosition(),
-//                    robot.motorLift.getCurrentPosition(),
-//                    robot.motorExtend.getCurrentPosition());
-//            telemetry.update();
-//        }
+        while(!isStarted){
+            telemetry.addData("Test Counts for debugging",  "Running at LF,LR,RF,RR,LIFT,EXT\",  \"Starting at %7d :%7d: %7d :%7d %7d :%7d\"",
+                    robot.motorLeftFront.getCurrentPosition(),
+                    robot.motorRightFront.getCurrentPosition(),
+                    robot.motorLeftRear.getCurrentPosition(),
+                    robot.motorRightRear.getCurrentPosition(),
+                    robot.motorLift.getCurrentPosition(),
+                    robot.motorExtend.getCurrentPosition());
+            telemetry.update();
+        }
         //*****************************************************************************************************************
-        //Forward 500 mm
-        robot.encoderDriveForwardorBackwards(DRIVE_SPEED,500,5);
-
-        encoderDriveForwardorBackwards(DRIVE_SPEED,500,5);
-        //Turn left
+//        //Forward 500 mm
+//        robot.encoderDriveForwardorBackwards(DRIVE_SPEED,500,5);
+//
+//        encoderDriveForwardorBackwards(DRIVE_SPEED,500,5);
+//        //Turn left
         //robot.encoderTurn(TURN_SPEED,-150,150,5);
         //Reverse 500 mm
         //encoderDriveForwardorBackwards(DRIVE_SPEED,-500,5);
@@ -159,7 +159,7 @@ public class TestA extends LinearOpMode {
 
         //Drop the Beacon
         //dropBeacon(5);
-        robot.DropBeacon(5);
+//        robot.DropBeacon(5);
 
 
         //turn left again (90 Degrees Left)

@@ -383,14 +383,50 @@ public class AutoOpRobot extends LinearOpMode {
 ////        }
 //    }
 
+    public void lower() {
+
+        while (!lower) {
+            //IMPORTANT remove encoder reset etc from lower methods or you will reset poistions every time in the methods and won't be able to keep track
+            //as an alternative keep a global variable for positions for each motor
+
+            robottelemetry.addData("Lift Current Position",  "Target :%7d", motorLift.getCurrentPosition());
+            encoderMoveLift(10500, 1, 5);
+            robottelemetry.update();
+            robottelemetry.addData("Extender Position",  "Target :%7d", motorExtend.getCurrentPosition());
+            encoderExtender(-2100, 1, 5);
+            //Unhtch servo here
+            //do {
+            hitchServo.setPosition(0);
+            //} while (hitchServo.getPosition() != 0);
+            sleep(1000);
+            //Move lift to horizontal (make sure position is not Reset, this is a differential from current position (9200) relative to where we started at 0
+            encoderMoveLift(-7600,1,5);
+            robottelemetry.addData("Lift Current Position",  "Target :%7d", motorLift.getCurrentPosition());
+            //encoderExtender(700, 1, 5);
+            robottelemetry.addData("Extender Position",  "Target :%7d", motorExtend.getCurrentPosition());
+            //Lower for drive
+            robottelemetry.update();
+            lower = true;
+            hitchServo.setPosition(1);
+
+        }
+    }
+
     public void sampleMineral(){
-        encoderMoveLift(2000, 1, 5);
-        encoderExtender(-260, 1, 5);
+        //encoderMoveLift(2000, 1, 5);
+        //encoderExtender(-260, 1, 5);
         motorCollect.setPower(0.8);
 //        encoderMoveLift(3100, 1, 5);
 //        motorCollect.setPower(0);
     }
 
+    public void collectMineralSample(){
+        encoderMoveLift(-2000, 1, 5);
+        encoderExtender(-2600, 1, 5);
+        motorCollect.setPower(0.8);
+        encoderMoveLift(3100, 1, 5);
+        motorCollect.setPower(0);
+    }
     private void disableEncoders(){
         motorLeftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorRightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -494,6 +530,12 @@ public class AutoOpRobot extends LinearOpMode {
 
     }
 
+    /**
+     * @param speed
+     * @param leftMMdistance
+     * @param rightMMdistance
+     * @param timeoutS
+     */
     public void encoderTurn(double speed, double leftMMdistance, double rightMMdistance, double timeoutS){
         int newLeftFrontTarget;
         int newLeftRearTarget;
@@ -607,45 +649,6 @@ public class AutoOpRobot extends LinearOpMode {
 
         // reset angle tracking on new heading.
         resetAngle();
-    }
-
-    public void lower() {
-
-        while (!lower) {
-            //IMPORTANT remove encoder reset etc from lower methods or you will reset poistions every time in the methods and won't be able to keep track
-            //as an alternative keep a global variable for positions for each motor
-
-            robottelemetry.addData("Lift Current Position",  "Target :%7d", motorLift.getCurrentPosition());
-            encoderMoveLift(10500, 1, 5);
-            robottelemetry.update();
-            robottelemetry.addData("Extender Position",  "Target :%7d", motorExtend.getCurrentPosition());
-            encoderExtender(-2100, 1, 5);
-            //Unhtch servo here
-            //do {
-            hitchServo.setPosition(0);
-            //} while (hitchServo.getPosition() != 0);
-            sleep(1000);
-            //Move lift to horizontal (make sure position is not Reset, this is a differential from current position (9200) relative to where we started at 0
-            encoderMoveLift(-7600,1,5);
-            robottelemetry.addData("Lift Current Position",  "Target :%7d", motorLift.getCurrentPosition());
-            //encoderExtender(700, 1, 5);
-            robottelemetry.addData("Extender Position",  "Target :%7d", motorExtend.getCurrentPosition());
-            //Lower for drive
-            robottelemetry.update();
-            lower = true;
-            hitchServo.setPosition(1);
-//            motorLift.setPower(1);
-//            sleep(3500);
-//            motorLift.setPower(0);
-//            motorExtend.setPower(-1);
-//            sleep(700);
-//            motorExtend.setPower(0);
-//
-//            hitchServo.setPower(1);
-//            sleep(2000);
-//            hitchServo.setPower(0);
-        }
-        // lower = true;
     }
 
     //Use the Rev4wheel Telop to get the Values for various positions

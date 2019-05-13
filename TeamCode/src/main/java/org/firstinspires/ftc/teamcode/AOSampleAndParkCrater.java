@@ -17,10 +17,12 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import java.util.List;
 import java.util.Locale;
 
-//This Class is a Test to use TF to get a Heading and then Sample based on feedback from the IMU
+//This Autonomous Mode will do the Following:
+// 1. Sample Mineral
+// 2. Park at the Crator, avoiding Silver Minerals
 //@Disabled
-@Autonomous(name = "AOSampleHeadingTest", group = "AutoOp")
-public class AOSampleHeadingTest extends LinearOpMode {
+@Autonomous(name = "AOSampleAndParkCrater", group = "AutoOp")
+public class AOSampleAndParkCrater extends LinearOpMode {
 
     public static final String TAG = "Vuforia VuMark Sample";
 
@@ -238,25 +240,24 @@ public class AOSampleHeadingTest extends LinearOpMode {
                                     if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
                                         telemetry.addData("Gold Mineral Position", "Left: " + goldMineralX);
                                         //Asume move will block and complete and TF interupted
-                                        //moveLeft(targetHeading);
                                         detected.targetHeading = targetHeading;
                                         detected.position = MineralPosition.LEFT;
                                         sampledetected = true;
                                     } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
                                         telemetry.addData("Gold Mineral Position", "Right: " + goldMineralX);
-                                        //moveRight(targetHeading);
                                         detected.targetHeading = targetHeading;
                                         detected.position = MineralPosition.RIGHT;
                                         sampledetected = true;
                                     } else {
                                         telemetry.addData("Gold Mineral Position", "Center: " + goldMineralX);
-                                        //moveMid(targetHeading);
                                         detected.targetHeading = targetHeading;
                                         detected.position = MineralPosition.CENTER;
                                         sampledetected = true;
                                     }
                                 }
-                                //We can't detect the far right
+                                //We can't detect the far right because of the camera position so we concentrate on what we can see
+                                //If both samples are silver we assume the 3rd (Far right which we can't see) is the Gold mineral
+                                //If either of the 2 are Gold or Silver, we just test which are on the Left
                                 if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X == -1) {
                                     if (goldMineralX < silverMineral1X) {
                                         telemetry.addData("Gold Mineral Position", "Left: " + goldMineralX);
@@ -287,10 +288,43 @@ public class AOSampleHeadingTest extends LinearOpMode {
                     }
 
                     if(sampledetected){
-                        telemetry.addData("Moving!", "H,P:(" + detected.targetHeading + "),(" + detected.position + ")");
-                        //robot.rotate(-1 * (int) Math.round(detected.targetHeading), 0.5);
-                        //robot.SampleMineral(); //Lower Lift and start Collector
-                        //robot.imuDriveStraight(0.3,250,3);
+                        //Sample and add Path and Park in Crator
+                        telemetry.addData("Moving to Mineral!", "Hdng,Pos:(" + detected.targetHeading + "),(" + detected.position + ")");
+                        //From the Lander
+                        //1. Rotate towards mineral
+                        //2. Setup collector and drive towards sample
+                        //3. Turn to avoid Silver
+                        //4. Lift Arm to fit over crator
+                        //5. Drive and Park
+                        switch (detected.position)
+                        {
+                            case LEFT:
+                                robot.sampleMineral(); //start Collector
+                                robot.rotate(-1 * (int) Math.round(detected.targetHeading), 0.3);
+                                robot.imuDriveStraight(0.3,250,3);
+                                //robot.collectMineralSample();
+                                //Turn to crator tba
+                                //Drive and Park
+                                break;
+                            case CENTER:
+                                robot.sampleMineral(); //start Collector
+                                //robot.collectMineralSample();
+                                //Drive to mineral will collector on
+                                robot.imuDriveStraight(0.3,150,3);
+                                //robot.encoderMoveLift(-7600,1,5);
+                                robot.imuDriveStraight(0.3,150,3);
+                                //Drive to Crator to park
+                                break;
+                            case RIGHT:
+                                robot.sampleMineral(); //start Collector
+                                //We can see the Right so we guess the right
+                                robot.rotate(22, 0.3);
+                                robot.imuDriveStraight(0.3,250,3);
+                                break;
+                            default://Move to the center
+                                robot.sampleMineral(); //start Collector
+                                robot.imuDriveStraight(0.3,250,3);
+                        }
                     }
                 }
             }
@@ -351,7 +385,7 @@ public class AOSampleHeadingTest extends LinearOpMode {
         //tfodParameters.useObjectTracker = true;
     }
 
-    public void unhitchRobot() {
+    private void unhitchRobot() {
         //Take xtra care of encoder settings, like RUN_TO_POSITION, if you need to keep track of positions in every step
         robot.motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.motorExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
