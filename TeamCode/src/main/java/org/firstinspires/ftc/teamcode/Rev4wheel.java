@@ -224,37 +224,37 @@ public class Rev4wheel extends LinearOpMode {
 //                telemetry.addData("Collector Stop Engaged", hitchServo.getPosition());
 //            }
 
-            if (gamepad1.dpad_up == true && gamepad1.y == false){
-                liftValue = (500 - motorLift.getCurrentPosition());
-                extendValue = -(2100 - motorExtend.getCurrentPosition());
-                motorLift.setTargetPosition(liftValue);
-                motorExtend.setTargetPosition(extendValue);
-                motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                motorExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                motorLift.setPower(1);
-                while (opModeIsActive() &&
-                        (motorLift.isBusy()) && !gamepad1.y)
-                {
-
-                    // Display it for the Debugging.
-                    telemetry.addData("Running to Target", liftValue);
-                    telemetry.update();
-                }
-                // Stop all motion after Path is completed;
-                motorLift.setPower(0);
-                motorLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                motorExtend.setPower(1);
-                while (opModeIsActive() &&
-                        (motorExtend.isBusy()) && !gamepad1.y)
-                {
-
-                    // Display it for the Debugging.
-                    telemetry.addData("Running to Target", extendValue);
-                    telemetry.update();
-                }
-                motorExtend.setPower(0);
-                motorExtend.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
+//            if (gamepad1.dpad_up == true && gamepad1.y == false){
+//                liftValue = (500 - motorLift.getCurrentPosition());
+//                extendValue = -(2100 - motorExtend.getCurrentPosition());
+//                motorLift.setTargetPosition(liftValue);
+//                motorExtend.setTargetPosition(extendValue);
+//                motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                motorExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                motorLift.setPower(1);
+//                while (opModeIsActive() &&
+//                        (motorLift.isBusy()) && !gamepad1.y)
+//                {
+//
+//                    // Display it for the Debugging.
+//                    telemetry.addData("Running to Target", liftValue);
+//                    telemetry.update();
+//                }
+//                // Stop all motion after Path is completed;
+//                motorLift.setPower(0);
+//                motorLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//                motorExtend.setPower(1);
+//                while (opModeIsActive() &&
+//                        (motorExtend.isBusy()) && !gamepad1.y)
+//                {
+//
+//                    // Display it for the Debugging.
+//                    telemetry.addData("Running to Target", extendValue);
+//                    telemetry.update();
+//                }
+//                motorExtend.setPower(0);
+//                motorExtend.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            }
 
             if(gamepad1.b == true) {
                 //To Lock

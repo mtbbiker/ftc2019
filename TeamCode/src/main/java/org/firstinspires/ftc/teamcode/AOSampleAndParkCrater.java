@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigationWebcam;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -206,7 +207,7 @@ public class AOSampleAndParkCrater extends LinearOpMode {
 //                    }
 //                }
 
-                while (opModeIsActive()) {
+                while (!sampledetected) {
 
                     if (tfod != null && !sampledetected) {
                         //Scan for Targets
@@ -299,31 +300,51 @@ public class AOSampleAndParkCrater extends LinearOpMode {
                         switch (detected.position)
                         {
                             case LEFT:
-                                robot.sampleMineral(); //start Collector
-                                robot.rotate(-1 * (int) Math.round(detected.targetHeading), 0.3);
-                                robot.imuDriveStraight(0.3,250,3);
-                                //robot.collectMineralSample();
-                                //Turn to crator tba
-                                //Drive and Park
+                                setupCollectorliftarm();
+                                robot.rotate(-1 * (int) Math.round(detected.targetHeading), 0.6);
+                                robot.encoderDriveStraight(0.6, 500, 4);
+                                robot.sampleMineral();
+                                //Move a bit forward to make sure if we drop the mineral its completely moved
+                                robot.encoderDriveStraight(0.6, 50, 4);
+                                //Lift the arm up
+                                robot.encoderMoveLift(-900, 1, 3);
+                                //Drive to Crator to park
+                                robot.encoderDriveStraight(0.5,150,3);
                                 break;
                             case CENTER:
-                                robot.sampleMineral(); //start Collector
-                                //robot.collectMineralSample();
-                                //Drive to mineral will collector on
-                                robot.imuDriveStraight(0.3,150,3);
-                                //robot.encoderMoveLift(-7600,1,5);
-                                robot.imuDriveStraight(0.3,150,3);
+                                setupCollectorliftarm();
+                                robot.encoderDriveStraight(0.6, 500, 4);
+                                robot.sampleMineral();
+                                //Move a bit forward to make sure if we drop the mineral its completely moved
+                                robot.encoderDriveStraight(0.6, 50, 4);
+                                //Lift the arm up
+                                robot.encoderMoveLift(-900, 1, 3);
                                 //Drive to Crator to park
+                                robot.encoderDriveStraight(0.5,150,3);
                                 break;
                             case RIGHT:
-                                robot.sampleMineral(); //start Collector
-                                //We can see the Right so we guess the right
-                                robot.rotate(22, 0.3);
-                                robot.imuDriveStraight(0.3,250,3);
+                                setupCollectorliftarm();
+                                robot.rotate(-16, 0.6);
+                                robot.encoderDriveStraight(0.6, 500, 4);
+                                robot.sampleMineral();
+                                //Move a bit forward to make sure if we drop the mineral its completely moved
+                                robot.encoderDriveStraight(0.6, 50, 4);
+                                //Lift the arm up
+                                robot.encoderMoveLift(-900, 1, 3);
+                                //Drive to Crator to park
+                                robot.encoderDriveStraight(0.5,150,3);
                                 break;
                             default://Move to the center
-                                robot.sampleMineral(); //start Collector
-                                robot.imuDriveStraight(0.3,250,3);
+                                setupCollectorliftarm();
+                                robot.encoderDriveStraight(0.6, 500, 4);
+                                robot.sampleMineral();
+                                //Move a bit forward to make sure if we drop the mineral its completely moved
+                                robot.encoderDriveStraight(0.6, 50, 4);
+                                //Lift the arm up
+                                robot.encoderMoveLift(-900, 1, 3);
+                                //Drive to Crator to park
+                                robot.encoderDriveStraight(0.5,150,3);
+                                break;
                         }
                     }
                 }
@@ -398,6 +419,22 @@ public class AOSampleAndParkCrater extends LinearOpMode {
         telemetry.addLine("Start Lowering the Robot");
         telemetry.update();
         robot.lower(); // See the changes to keep track of position
+        telemetry.update();
+    }
+
+    private void setupCollectorliftarm(){
+
+        robot.motorLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.motorLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.motorExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //robot.motorLift.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        //Lift and extend
+        telemetry.addData("Lift Current Position",  "Target :%7d", robot.motorLift.getCurrentPosition());
+        //Negative is Lift -700 Extender +3700
+        robot.encoderMoveLift(-500, 1, 3);
+        robot.encoderExtender(3800,0.8,3);
         telemetry.update();
     }
 }
