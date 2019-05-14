@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigationWebcam;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -18,13 +16,9 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import java.util.List;
 import java.util.Locale;
 
-//This Autonomous Mode will do the Following:
-// 1. Sample Mineral opposite the Crator
-// 2. Park at the Crator, avoiding Silver Minerals
-//@Disabled
-@Autonomous(name = "AOSampleAtCratorAndParkCrater", group = "AutoOp")
-public class AOSampleAndParkCrater extends LinearOpMode {
-
+//This OPMode Sample across the Crator, Drop the Beacon and Park again at the Crator from the side
+@Autonomous(name = "AOSampleAtCraterDropBeaconParkCrator", group = "AutoOp")
+public class AOSampleAtCraterDropBeaconParkCrator extends LinearOpMode {
     public static final String TAG = "Vuforia VuMark Sample";
 
     OpenGLMatrix lastLocation = null;
@@ -88,124 +82,6 @@ public class AOSampleAndParkCrater extends LinearOpMode {
                     tfod.activate();
                 }
                 boolean sampledetected =false;
-//                while (!targetfound){
-//
-//                    if (tfod != null) {
-//                        //Scan for Targets
-//                        // getUpdatedRecognitions() will return null if no new information is available since
-//                        // the last time that call was made.
-//                        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-//
-//                        if (updatedRecognitions != null) {
-//                            telemetry.addData("# Object Detected", updatedRecognitions.size());
-//                            //**************************************************************************************************************************
-//                            //***************** Note: Camera mounted left on the Robot, only the left 2 minerals might be in View
-//                            if (updatedRecognitions.size() >= 2){
-//                                //If both are Silver, then Gold must be out of view to the Right
-//                                int silverfound = 0;
-//                                int goldMineralX = -1;
-//                                int silverMineral1X = -1;
-//                                int silverMineral2X = -1;
-//                                double targetHeading = 0;
-//
-//                                for (Recognition recognition : updatedRecognitions) {
-//                                    if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-//                                        goldMineralX = (int) recognition.getLeft();
-//                                        telemetry.addData("Gold Mineral Detected: ","Sample Gold detected "  +goldMineralX);
-//                                        targetHeading = recognition.estimateAngleToObject(AngleUnit.DEGREES);
-//                                        detected.targetHeading = targetHeading;
-//                                        targetfound=true;
-//                                    } else if (silverMineral1X == -1) {
-//                                        silverMineral1X = (int) recognition.getLeft();
-//                                        telemetry.addData("Silver Mineral Detected: ","Sample 1");
-//                                        silverfound = silverfound + 1 ;
-//                                    } else {
-//                                        silverMineral2X = (int) recognition.getLeft();
-//                                        telemetry.addData("Silver Mineral Detected: ","Sample 2");
-//                                        silverfound = silverfound + 1 ;
-//                                    }
-//                                }
-//                                //Additional angle needs to be added for each option to only target Gold
-//                                if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1)
-//                                {
-//                                    if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
-//                                        telemetry.addData("Gold Mineral Position", "Left: " + goldMineralX);
-//                                        //Asume move will block and complete and TF interupted
-//                                        //moveLeft(targetHeading);
-//                                        telemetry.addData("Estimate Horizontal Angle to Object:", "Angle: " + targetHeading);
-//                                        //telemetry.addData("Estimate Distance to Object:", "Distance: " + recognition.);
-//                                        //robot.imuTurn(1,targetHeading,3);
-//                                        targetfound=true;
-//                                        telemetry.addData("Target found Object:", "Angle: " + robot.getAngle());
-//                                        detected.position = MineralPosition.LEFT;
-//                                    }
-//                                    else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X)
-//                                    {
-//                                        telemetry.addData("Gold Mineral Position", "Right: " + goldMineralX);
-//                                        detected.position = MineralPosition.RIGHT;
-//                                        targetfound=true;
-//                                    }
-//                                    else
-//                                    {
-//                                        telemetry.addData("Gold Mineral Position", "Center: " + goldMineralX);
-//                                        detected.position = MineralPosition.CENTER;
-//                                        targetfound=true;
-//                                    }
-//                                }
-//                                if (goldMineralX == -1 && silverfound ==2){
-//                                    telemetry.addData("Gold Mineral Position", "Right: " + goldMineralX +" Silver: " + silverfound) ;
-//                                    targetfound=true;
-//                                }
-//                            }
-//                            telemetry.update();
-//                            if (updatedRecognitions.size() > 2) {
-//
-//                                int goldMineralX = -1;
-//                                int silverMineral1X = -1;
-//                                int silverMineral2X = -1;
-//                                double targetHeading = 0;
-//
-//                                for (Recognition recognition : updatedRecognitions) {
-//                                    if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-//                                        goldMineralX = (int) recognition.getLeft();
-//                                        telemetry.addData("Gold Mineral Detected: ","Sample Gold detected "  +goldMineralX);
-//                                        targetHeading = recognition.estimateAngleToObject(AngleUnit.DEGREES);
-//                                        detected.targetHeading = targetHeading;
-//                                        targetfound=true;
-//
-//                                    } else if (silverMineral1X == -1) {
-//                                        silverMineral1X = (int) recognition.getLeft();
-//                                        telemetry.addData("Silver Mineral Detected: ","Sample 1");
-//                                    } else {
-//                                        silverMineral2X = (int) recognition.getLeft();
-//                                        telemetry.addData("Silver Mineral Detected: ","Sample 2");
-//                                    }
-//                                }
-//                                //Additional angle needs to be added for each option to only target Gold
-//                                if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
-//                                    if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
-//                                        telemetry.addData("Gold Mineral Position", "Left: " + goldMineralX);
-//                                        //Asume move will block and complete and TF interupted
-//                                        telemetry.addData("Estimate Horizontal Angle to Object:", "Angle: " + targetHeading);
-//                                        telemetry.addData("Target found Object:", "Angle: " + robot.getAngle());
-//                                        detected.position = MineralPosition.LEFT;
-//                                        targetfound = true;
-//                                    } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
-//                                        telemetry.addData("Gold Mineral Position", "Right: " + goldMineralX);
-//                                        detected.position = MineralPosition.RIGHT;
-//                                        targetfound=true;
-//                                    } else {
-//                                        telemetry.addData("Gold Mineral Position", "Center: " + goldMineralX);
-//                                        detected.position = MineralPosition.CENTER;
-//                                        targetfound=true;
-//                                    }
-//                                }
-//                            }
-//                            telemetry.update();
-//                        }
-//                        //Now Go and drop Beacon or Drive to Crator, See OpModes
-//                    }
-//                }
 
                 while (!sampledetected) {
 
@@ -313,8 +189,7 @@ public class AOSampleAndParkCrater extends LinearOpMode {
                                 robot.encoderDriveStraight(0.6, 50, 4);
                                 //Lift the arm up
                                 robot.encoderMoveLift(-900, 1, 3);
-                                //Drive to Crator to park
-                                robot.encoderDriveStraight(0.5,150,3);
+                                //TODO : Add Path to Beacon and Crator
                                 break;
                             case CENTER:
                                 setupCollectorliftarm();
@@ -324,8 +199,7 @@ public class AOSampleAndParkCrater extends LinearOpMode {
                                 robot.encoderDriveStraight(0.6, 50, 4);
                                 //Lift the arm up
                                 robot.encoderMoveLift(-900, 1, 3);
-                                //Drive to Crator to park
-                                robot.encoderDriveStraight(0.5,150,3);
+                                //TODO : Add Path to Beacon and Crator
                                 break;
                             case RIGHT:
                                 setupCollectorliftarm();
@@ -337,7 +211,7 @@ public class AOSampleAndParkCrater extends LinearOpMode {
                                 //Lift the arm up
                                 robot.encoderMoveLift(-900, 1, 3);
                                 //Drive to Crator to park
-                                robot.encoderDriveStraight(0.5,150,3);
+                                //TODO : Add Path to Beacon and Crator
                                 break;
                             default://Move to the center
                                 setupCollectorliftarm();
@@ -348,7 +222,7 @@ public class AOSampleAndParkCrater extends LinearOpMode {
                                 //Lift the arm up
                                 robot.encoderMoveLift(-900, 1, 3);
                                 //Drive to Crator to park
-                                robot.encoderDriveStraight(0.5,150,3);
+                                //TODO : Add Path to Beacon and Crator
                                 break;
                         }
                     }
@@ -444,16 +318,3 @@ public class AOSampleAndParkCrater extends LinearOpMode {
     }
 }
 
-enum MineralPosition {
-    LEFT,CENTER,RIGHT
-}
-class MineralDetected{
-
-    double targetHeading;
-
-    double distance;
-
-    MineralPosition position;
-
-
-}
