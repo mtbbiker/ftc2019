@@ -49,7 +49,7 @@ public class AOSampleAtCraterDropBeaconParkCrator extends LinearOpMode {
         try{
             robot.init(hardwareMap);
 
-            telemetry.addData(">", "Press Play to start tracking");
+            telemetry.addData(">", "Wait for initialization");
             telemetry.update();
             /*
              * Retrieve the camera we are to use.
@@ -187,9 +187,23 @@ public class AOSampleAtCraterDropBeaconParkCrator extends LinearOpMode {
                                 robot.sampleMineral();
                                 //Move a bit forward to make sure if we drop the mineral its completely moved
                                 robot.encoderDriveStraight(0.6, 50, 4);
-                                //Lift the arm up
-                                robot.encoderMoveLift(-900, 1, 3);
-                                //TODO : Add Path to Beacon and Crator
+                                //Lift the arm up higher than the sides because we might over reach
+                                robot.encoderMoveLift(-1200, 1, 3);
+                                //Reverse a bit
+                                robot.encoderDriveStraight(0.6, -50, 4);
+                                //Turn left towards Depot
+                                robot.rotate(30,0.6);
+                                //Drive to Depot
+                                robot.encoderDriveStraight(0.7,200,4);
+                                //Turn to Drop
+                                robot.rotate(90,0.8);
+                                //Drop beacon
+                                robot.dropBeacon(2);
+                                //Turn Right againrive
+                                robot.rotate(90,0.8);
+                                //Drive to crator
+                                robot.encoderDriveStraight(1,300,5);
+                                //We might need to extend and lift, but we will Test first
                                 break;
                             case CENTER:
                                 setupCollectorliftarm();
@@ -197,9 +211,24 @@ public class AOSampleAtCraterDropBeaconParkCrator extends LinearOpMode {
                                 robot.sampleMineral();
                                 //Move a bit forward to make sure if we drop the mineral its completely moved
                                 robot.encoderDriveStraight(0.6, 50, 4);
-                                //Lift the arm up
-                                robot.encoderMoveLift(-900, 1, 3);
-                                //TODO : Add Path to Beacon and Crator
+                                //Lift the arm up to lear sides of field
+                                robot.encoderMoveLift(-1200, 1, 3);
+                                //Distances and headings need to be Tested and validated
+                                //Reverse a bit
+                                robot.encoderDriveStraight(0.6, -50, 4);
+                                //Turn left towards Depot
+                                robot.rotate(35,0.6);
+                                //Drive to Depot
+                                robot.encoderDriveStraight(0.7,200,4);
+                                //Turn to Drop
+                                robot.rotate(90,0.8);
+                                //Drop beacon
+                                robot.dropBeacon(2);
+                                //Turn Right againrive
+                                robot.rotate(90,0.8);
+                                //Drive to crator
+                                robot.encoderDriveStraight(1,300,5);
+                                //We might need to extend and lift, but we will Test first
                                 break;
                             case RIGHT:
                                 setupCollectorliftarm();
@@ -208,10 +237,24 @@ public class AOSampleAtCraterDropBeaconParkCrator extends LinearOpMode {
                                 robot.sampleMineral();
                                 //Move a bit forward to make sure if we drop the mineral its completely moved
                                 robot.encoderDriveStraight(0.6, 50, 4);
-                                //Lift the arm up
-                                robot.encoderMoveLift(-900, 1, 3);
-                                //Drive to Crator to park
-                                //TODO : Add Path to Beacon and Crator
+                                //Lift the arm up to lear sides of field
+                                robot.encoderMoveLift(-1200, 1, 3);
+                                //Distances and headings need to be Tested and validated
+                                //Reverse a bit
+                                robot.encoderDriveStraight(0.6, -50, 4);
+                                //Turn left towards Depot
+                                robot.rotate(40,0.6);
+                                //Drive to Depot
+                                robot.encoderDriveStraight(0.7,200,4);
+                                //Turn to Drop
+                                robot.rotate(90,0.8);
+                                //Drop beacon
+                                robot.dropBeacon(2);
+                                //Turn Right againrive
+                                robot.rotate(90,0.8);
+                                //Drive to crator
+                                robot.encoderDriveStraight(1,300,5);
+                                //We might need to extend and lift, but we will Test first
                                 break;
                             default://Move to the center
                                 setupCollectorliftarm();
@@ -219,10 +262,23 @@ public class AOSampleAtCraterDropBeaconParkCrator extends LinearOpMode {
                                 robot.sampleMineral();
                                 //Move a bit forward to make sure if we drop the mineral its completely moved
                                 robot.encoderDriveStraight(0.6, 50, 4);
-                                //Lift the arm up
-                                robot.encoderMoveLift(-900, 1, 3);
-                                //Drive to Crator to park
-                                //TODO : Add Path to Beacon and Crator
+                                robot.encoderMoveLift(-1200, 1, 3);
+                                //Distances and headings need to be Tested and validated
+                                //Reverse a bit
+                                robot.encoderDriveStraight(0.6, -50, 4);
+                                //Turn left towards Depot
+                                robot.rotate(35,0.6);
+                                //Drive to Depot
+                                robot.encoderDriveStraight(0.7,200,4);
+                                //Turn to Drop
+                                robot.rotate(90,0.8);
+                                //Drop beacon
+                                robot.dropBeacon(2);
+                                //Turn Right againrive
+                                robot.rotate(90,0.8);
+                                //Drive to crator
+                                robot.encoderDriveStraight(1,300,5);
+                                //We might need to extend and lift, but we will Test first
                                 break;
                         }
                     }

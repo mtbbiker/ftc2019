@@ -50,7 +50,7 @@ public class AOSampleAtDepotDropBeaconParkAtCrator extends LinearOpMode {
         try{
             robot.init(hardwareMap);
 
-            telemetry.addData(">", "Press Play to start tracking");
+            telemetry.addData(">", "Wait for initialization");
             telemetry.update();
             /*
              * Retrieve the camera we are to use.
@@ -75,6 +75,7 @@ public class AOSampleAtDepotDropBeaconParkAtCrator extends LinearOpMode {
             robot.setRobottelemetry(telemetry);
             robot.start();
             //unhitchRobot();
+            setupCollectorliftarm();
 
             if (opModeIsActive()) {
                 /** Activate Tensor Flow Object Detection. */
@@ -182,18 +183,30 @@ public class AOSampleAtDepotDropBeaconParkAtCrator extends LinearOpMode {
                         switch (detected.position)
                         {
                             case LEFT:
-                                setupCollectorliftarm();
+
+                                //setupCollectorliftarm();
                                 robot.rotate(-1 * (int) Math.round(detected.targetHeading), 0.6);
                                 robot.encoderDriveStraight(0.6, 500, 4);
                                 robot.sampleMineral();
                                 //Move a bit forward to make sure if we drop the mineral its completely moved
                                 robot.encoderDriveStraight(0.6, 50, 4);
                                 //Lift the arm up
-                                robot.encoderMoveLift(-900, 1, 3);
-                                //TODO : Add Path to Beacon and Crator
+                                robot.encoderMoveLift(-1200, 1, 3);
+                                //Distances and headings need to be Tested and validated
+                                //Reverse a bit to miss the Silver
+                                robot.encoderDriveStraight(0.6, -50, 4);
+                                //Turn Right towards crator
+                                robot.rotate(-90,0.6);
+                                //Drive to Crator
+                                robot.encoderDriveStraight(0.8,200,4);
+                                //Make another turn
+                                robot.rotate(-45,0.6);
+                                //Drive to Crator
+                                robot.encoderDriveStraight(0.8,200,4);
+                                //We might need to extend and lift, but we will Test first
                                 break;
                             case CENTER:
-                                setupCollectorliftarm();
+                                //setupCollectorliftarm();
                                 robot.encoderDriveStraight(0.6, 500, 4);
                                 robot.sampleMineral();
                                 //Move a bit forward to make sure if we drop the mineral its completely moved
@@ -203,7 +216,7 @@ public class AOSampleAtDepotDropBeaconParkAtCrator extends LinearOpMode {
                                 //TODO : Add Path to Beacon and Crator
                                 break;
                             case RIGHT:
-                                setupCollectorliftarm();
+                                //setupCollectorliftarm();
                                 robot.rotate(-16, 0.6);
                                 robot.encoderDriveStraight(0.6, 500, 4);
                                 robot.sampleMineral();
@@ -215,7 +228,7 @@ public class AOSampleAtDepotDropBeaconParkAtCrator extends LinearOpMode {
                                 //TODO : Add Path to Beacon and Crator
                                 break;
                             default://Move to the center
-                                setupCollectorliftarm();
+                                //setupCollectorliftarm();
                                 robot.encoderDriveStraight(0.6, 500, 4);
                                 robot.sampleMineral();
                                 //Move a bit forward to make sure if we drop the mineral its completely moved

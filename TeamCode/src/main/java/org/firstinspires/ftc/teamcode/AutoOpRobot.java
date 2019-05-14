@@ -427,6 +427,7 @@ public class AutoOpRobot extends LinearOpMode {
         encoderMoveLift(3100, 1, 5);
         motorCollect.setPower(0);
     }
+
     private void disableEncoders(){
         motorLeftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorRightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -448,6 +449,34 @@ public class AutoOpRobot extends LinearOpMode {
         motorLeftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorRightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorRightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    public void dropBeacon(double timeoutS){
+
+        robottelemetry.addData("Beacon Drop", "Initialized");
+        robottelemetry.update();
+        runtime.reset();
+        //dropBeaconServo.setPosition(0);
+        robottelemetry.addData("Reset the Beacon",dropBeaconServo.getPosition());
+
+        dropBeaconServo.setDirection(Servo.Direction.REVERSE);
+        dropBeaconServo.setPosition(0.5);
+
+        dropBeaconServo.setPosition(0);
+        while (opModeIsActive()) {
+            //WE don't have servo feedback
+            robottelemetry.addData("Drop the Beacon and wait",dropBeaconServo.getPosition());
+            sleep(1000);
+            robottelemetry.update();
+            //if(robot.dropBeaconServo.getPosition()>0.89)
+            break;
+        }
+
+        dropBeaconServo.setPosition(0.5);
+        robottelemetry.addData("Drop the Beacon",dropBeaconServo.getPosition());
+
+        robottelemetry.update();
+
     }
 
     /**
@@ -771,267 +800,6 @@ public class AutoOpRobot extends LinearOpMode {
         motorLeftFront.setPower(0);
         motorLeftRear.setPower(0);
     }
-
-//    public void turnAroundUntilFound() {
-//        motorRightFront.setPower(0.2);
-//        motorRightRear.setPower(0.2);
-//        motorLeftFront.setPower(-0.2);
-//        motorLeftRear.setPower(-0.2);
-//    }
-//
-//    public void MoveL() {
-//        motorRightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorLeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorLeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorRightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        double driveDistance = 100 * COUNTS_PER_MM;
-//        double startPos = motorRightFront.getCurrentPosition();
-//        while (motorRightFront.getCurrentPosition() < driveDistance + startPos) {
-//            motorLeftFront.setPower(+1);
-//            motorLeftRear.setPower(-1);
-//            motorRightFront.setPower(+1);
-//            motorRightRear.setPower(-1);
-//            robottelemetry.addLine("Move Left");
-//        }
-//    }
-//
-//    public void ResetLeft() {
-//        motorRightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorLeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorLeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorRightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        double driveDistance1 = 100 * COUNTS_PER_MM;
-//        double startPos1 = motorRightFront.getCurrentPosition();
-//        while (motorRightFront.getCurrentPosition() < driveDistance1 + startPos1) {
-//            motorLeftFront.setPower(-1);
-//            motorLeftRear.setPower(-1);
-//            motorRightFront.setPower(-1);
-//            motorRightRear.setPower(-1);
-//            robottelemetry.addLine("Repo");
-//        }
-//
-//        double driveDistance2 = 100 * COUNTS_PER_MM;
-//        double startPos2 = motorRightFront.getCurrentPosition();
-//        while (motorRightFront.getCurrentPosition() < driveDistance2 + startPos2) {
-//            motorLeftFront.setPower(-1);
-//            motorLeftRear.setPower(+1);
-//            motorRightFront.setPower(-1);
-//            motorRightRear.setPower(+1);
-//            robottelemetry.addLine("Move Left");
-//        }
-//    }
-//
-//    public void MoveR() {
-//        motorRightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorLeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorLeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorRightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        double driveDistance = 100 * COUNTS_PER_MM;
-//        double startPos = motorRightFront.getCurrentPosition();
-//        while (motorRightFront.getCurrentPosition() < driveDistance + startPos) {
-//            motorLeftFront.setPower(-1);
-//            motorLeftRear.setPower(+1);
-//            motorRightFront.setPower(-1);
-//            motorRightRear.setPower(+1);
-//            robottelemetry.addLine("Move Right");
-//        }
-//    }
-//
-//    public void ResetRight() {
-//        motorRightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorLeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorLeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorRightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        double driveDistance1 = 100 * COUNTS_PER_MM;
-//        double startPos1 = motorRightFront.getCurrentPosition();
-//        while (motorRightFront.getCurrentPosition() < driveDistance1 + startPos1) {
-//            motorLeftFront.setPower(-1);
-//            motorLeftRear.setPower(-1);
-//            motorRightFront.setPower(-1);
-//            motorRightRear.setPower(-1);
-//            robottelemetry.addLine("Repo");
-//        }
-//
-//        double driveDistance2 = 100 * COUNTS_PER_MM;
-//        double startPos2 = motorRightFront.getCurrentPosition();
-//        while (motorRightFront.getCurrentPosition() < driveDistance2 + startPos2) {
-//            motorLeftFront.setPower(+1);
-//            motorLeftRear.setPower(-1);
-//            motorRightFront.setPower(+1);
-//            motorRightRear.setPower(-1);
-//            robottelemetry.addLine("Move Right");
-//        }
-//    }
-
-//    public void Sample() {
-//        motorRightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorLeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorLeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorRightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        double driveDistance = 100 * COUNTS_PER_MM;
-//        double startPos = motorRightFront.getCurrentPosition();
-//        while (motorRightFront.getCurrentPosition() < driveDistance + startPos) {
-//            motorLeftFront.setPower(+1);
-//            motorLeftRear.setPower(+1);
-//            motorRightFront.setPower(+1);
-//            motorRightRear.setPower(+1);
-//            robottelemetry.addLine("Sample");
-//        }
-//    }
-
-//    public void ResetMid() {
-//        motorRightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorLeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorLeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorRightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        double driveDistance = 100 * COUNTS_PER_MM;
-//        double startPos = motorRightFront.getCurrentPosition();
-//        while (motorRightFront.getCurrentPosition() < driveDistance + startPos) {
-//            motorLeftFront.setPower(-1);
-//            motorLeftRear.setPower(-1);
-//            motorRightFront.setPower(-1);
-//            motorRightRear.setPower(1);
-//            robottelemetry.addLine("Reset");
-//        }
-//    }
-//
-//    public void MoveFromCrator() {
-//        motorRightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorLeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorLeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorRightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//
-//        double driveDistance1 = 1400 * COUNTS_PER_MM;
-//        double startPos1 = motorRightFront.getCurrentPosition();
-//        while (motorRightFront.getCurrentPosition() < driveDistance1 + startPos1) {
-//            motorLeftFront.setPower(+1);
-//            motorLeftRear.setPower(+1);
-//            motorRightFront.setPower(+1);
-//            motorRightRear.setPower(+1);
-//            robottelemetry.addLine("Forward");
-//        }
-//
-//        double driveDistance2 = 100 * COUNTS_PER_MM;
-//        double startPos2 = motorRightFront.getCurrentPosition();
-//        while (motorRightFront.getCurrentPosition() < driveDistance2 + startPos2) {
-//            motorLeftFront.setPower(-1);
-//            motorLeftRear.setPower(-1);
-//            motorRightFront.setPower(+1);
-//            motorRightRear.setPower(+1);
-//            robottelemetry.addLine("Turn");
-//        }
-//
-//        double driveDistance3 = 1200 * COUNTS_PER_MM;
-//        double startPos3 = motorRightFront.getCurrentPosition();
-//        while (motorRightFront.getCurrentPosition() < driveDistance3 + startPos3) {
-//            motorLeftFront.setPower(+1);
-//            motorLeftRear.setPower(+1);
-//            motorRightFront.setPower(+1);
-//            motorRightRear.setPower(+1);
-//            robottelemetry.addLine("Forward");
-//        }
-//
-//        double driveDistance4 = 100 * COUNTS_PER_MM;
-//        double startPos4 = motorRightFront.getCurrentPosition();
-//        while (motorRightFront.getCurrentPosition() < driveDistance4 + startPos4) {
-//            motorLeftFront.setPower(+1);
-//            motorLeftRear.setPower(+1);
-//            motorRightFront.setPower(-1);
-//            motorRightRear.setPower(-1);
-//            robottelemetry.addLine("Turn");
-//        }
-//
-//        DropBeacon();
-//
-//        double driveDistance5 = 1880 * COUNTS_PER_MM;
-//        double startPos5 = motorRightFront.getCurrentPosition();
-//        while (motorRightFront.getCurrentPosition() < driveDistance5 + startPos5) {
-//            motorLeftFront.setPower(+1);
-//            motorLeftRear.setPower(+1);
-//            motorRightFront.setPower(+1);
-//            motorRightRear.setPower(+1);
-//            robottelemetry.addLine("Turn");
-//        }
-//    }
-//
-//    public void MoveFromCorner() {
-//        motorRightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorLeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motorLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorLeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motorRightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//
-//        double driveDistance3 = 1400 * COUNTS_PER_MM;
-//        double startPos3 = motorRightFront.getCurrentPosition();
-//        while (motorRightFront.getCurrentPosition() < driveDistance3 + startPos3) {
-//            motorLeftFront.setPower(+1);
-//            motorLeftRear.setPower(+1);
-//            motorRightFront.setPower(+1);
-//            motorRightRear.setPower(+1);
-//            robottelemetry.addLine("Forward");
-//        }
-//
-//        double driveDistance4 = 100 * COUNTS_PER_MM;
-//        double startPos4 = motorRightFront.getCurrentPosition();
-//        while (motorRightFront.getCurrentPosition() < driveDistance4 + startPos4) {
-//            motorLeftFront.setPower(+1);
-//            motorLeftRear.setPower(+1);
-//            motorRightFront.setPower(-1);
-//            motorRightRear.setPower(-1);
-//            robottelemetry.addLine("Turn");
-//        }
-//
-//        DropBeacon();
-//
-//        double driveDistance5 = 1880 * COUNTS_PER_MM;
-//        double startPos5 = motorRightFront.getCurrentPosition();
-//        while (motorRightFront.getCurrentPosition() < driveDistance5 + startPos5) {
-//            motorLeftFront.setPower(+1);
-//            motorLeftRear.setPower(+1);
-//            motorRightFront.setPower(+1);
-//            motorRightRear.setPower(+1);
-//            robottelemetry.addLine("Turn");
-//        }
-//    }
-//
-//    public void DropBeacon() {
-//        dropBeaconServo.setPosition(0.90);
-//        robottelemetry.addData("Drop the Beacon", dropBeaconServo.getPosition());
-//
-//        dropBeaconServo.setPosition(0.5);
-//        robottelemetry.addData("Drop the Beacon", dropBeaconServo.getPosition());
-//    }
 
     String formatRaw(int rawValue) {
         return String.format("%d", rawValue);
