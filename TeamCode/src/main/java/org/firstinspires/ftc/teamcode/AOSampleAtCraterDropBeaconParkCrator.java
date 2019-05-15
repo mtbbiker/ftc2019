@@ -182,18 +182,19 @@ public class AOSampleAtCraterDropBeaconParkCrator extends LinearOpMode {
                             case LEFT:
                                 setupCollectorliftarm();
                                 robot.rotate(-1 * (int) Math.round(detected.targetHeading), 0.6);
-                                robot.encoderDriveStraight(0.6, 500, 4);
                                 robot.sampleMineral();
+                                robot.encoderDriveStraight(1, 500, 4);
                                 //Move a bit forward to make sure if we drop the mineral its completely moved
-                                robot.encoderDriveStraight(0.6, 50, 4);
+                                robot.encoderDriveStraight(1, 50, 4);
                                 //Lift the arm up higher than the sides because we might over reach
                                 robot.encoderMoveLift(1200, 1, 3);
                                 //Reverse a bit
-                                robot.encoderDriveStraight(0.6, -50, 4);
+                                robot.encoderDriveStraight(1, -50, 4);
+                                robot.motorCollect.setPower(0);
                                 //Turn left towards Depot
-                                robot.rotate(30,0.6);
+                                robot.rotate(45,0.6);
                                 //Drive to Depot
-                                robot.encoderDriveStraight(0.7,200,4);
+                                robot.encoderDriveStraight(1,200,4);
                                 //Turn to Drop
                                 robot.rotate(90,0.8);
                                 //Drop beacon
