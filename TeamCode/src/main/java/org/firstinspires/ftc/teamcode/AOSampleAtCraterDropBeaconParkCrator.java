@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import java.util.List;
 import java.util.Locale;
 
-//This OPMode Sample across the Crator, Drop the Beacon and Park again at the Crator from the side
+//This OpMode Sample across the Crator, Drop the Beacon and Park again at the Crator from the side
 @Autonomous(name = "AOSampleAtCraterDropBeaconParkCrator", group = "AutoOp")
 public class AOSampleAtCraterDropBeaconParkCrator extends LinearOpMode {
     public static final String TAG = "Vuforia VuMark Sample";
@@ -175,9 +175,9 @@ public class AOSampleAtCraterDropBeaconParkCrator extends LinearOpMode {
                         //From the Lander
                         //1. Rotate towards mineral
                         //2. Setup collector and drive towards sample
-                        //3. Turn to avoid Silver
+                        //3. Turn to avoid Silver backup to Save Location
                         //4. Lift Arm to fit over crator
-                        //5. Drive and Park
+                        //5. Drive and Park from a central point for all collection
                         switch (detected.position)
                         {
                             case LEFT:
@@ -296,6 +296,25 @@ public class AOSampleAtCraterDropBeaconParkCrator extends LinearOpMode {
             }
         }
 
+    }
+
+    //Drive from a predefined position, then drop Beacon and Park at the Crator
+    private void DropAndPark(int initialturn, int backupPathLength){
+        //Reverse a bit
+        robot.encoderDriveStraight(0.6, -50, 4);
+        //Turn left towards Depot
+        robot.rotate(35,0.6);
+        //Drive to Depot
+        robot.encoderDriveStraight(0.7,200,4);
+        //Turn to Drop
+        robot.rotate(90,0.8);
+        //Drop beacon
+        robot.dropBeacon(2);
+        //Turn Right againrive
+        robot.rotate(90,0.8);
+        //Drive to crator
+        robot.encoderDriveStraight(1,300,5);
+        //We might need to extend and lift, but we will Test first
     }
 
     String formatDegrees(double degrees)

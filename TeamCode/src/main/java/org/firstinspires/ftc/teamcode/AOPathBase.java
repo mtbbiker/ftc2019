@@ -28,22 +28,53 @@ public abstract class AOPathBase extends LinearOpMode {
         telemetry.update();
     }
 
+    //Path when Robot is facing the Crator from Latch
     //Drive from a predefined position, then drop Beacon and Park at the Crator
-    public void dropAndPark(int initialturn, int backupPathLength){
+    //This is the Crator opposite from where the Robot started
+    public void dropAndParkCratorSide(int initialturn, int backupPathLength){
         //Reverse a bit
-        robot.encoderDriveStraight(0.6, -50, 4);
+        robot.encoderDriveStraight(0.6, backupPathLength, 4);
         //Turn left towards Depot
-        robot.rotate(35,0.6);
+        robot.rotate((90 - initialturn),0.6);
+        //Drive First Path towards wall
+        robot.encoderDriveStraight(0.7,300,4);
+        //Turn to Depot
+        robot.rotate(45,0.7);
         //Drive to Depot
-        robot.encoderDriveStraight(0.7,200,4);
+        robot.encoderDriveStraight(0.7,300,4);
         //Turn to Drop
-        robot.rotate(90,0.8);
+        robot.rotate(-90,0.7);
         //Drop beacon
         robot.dropBeacon(2);
-        //Turn Right againrive
-        robot.rotate(90,0.8);
+        //Turn Right again
+        robot.rotate(-90,0.7);
         //Drive to crator
-        robot.encoderDriveStraight(1,300,5);
+        robot.encoderDriveStraight(0.8,1500,5);
+        //We might need to extend and lift, but we will Test first
+    }
+
+    //Path when Robot is facing the Depot from Latch
+    //Drive from a predefined position, then drop Beacon and Park at the Crator
+    //Left of the Depot looking from Lander (Depot left, Crator right)
+    public void dropAndParkDepotSide(int initialturn, int backupPathLength){
+        //Reverse a bit
+        robot.encoderDriveStraight(0.6, backupPathLength, 4);
+        //Turn left towards Depot
+        robot.rotate((90 - initialturn),0.6);
+        //Drive First Path towards wall
+        robot.encoderDriveStraight(0.7,300,4);
+        //Turn to Depot
+        robot.rotate(-135,0.7);
+        //Drive towards Depot
+        robot.encoderDriveStraight(0.7,300,4);
+        //Drop beacon
+        robot.dropBeacon(2);
+        //Turn Right to 1
+        robot.rotate(-90,0.7);
+        //Turn another to drive to Neutral Crator
+        robot.rotate(-90,0.7);
+        //Drive to crator
+        robot.encoderDriveStraight(0.8,1500,5);
         //We might need to extend and lift, but we will Test first
     }
 }
