@@ -90,6 +90,7 @@ public class AutoOpRobot extends LinearOpMode {
         motorLeftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         motorLeftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         motorExtend.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorLift.setDirection(DcMotorSimple.Direction.REVERSE);
         //motorRightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         //motorRightRear.setDirection(DcMotorSimple.Direction.REVERSE);
         //motorCollect = masterConfig.get(DcMotor.class, "motorCollect");
@@ -393,21 +394,22 @@ public class AutoOpRobot extends LinearOpMode {
             encoderMoveLift(10500, 1, 5);
             robottelemetry.update();
             robottelemetry.addData("Extender Position",  "Target :%7d", motorExtend.getCurrentPosition());
-            encoderExtender(-2100, 1, 5);
+            encoderExtender(2100, 1, 5);
             //Unhtch servo here
             //do {
             hitchServo.setPosition(0);
             //} while (hitchServo.getPosition() != 0);
             sleep(1000);
             //Move lift to horizontal (make sure position is not Reset, this is a differential from current position (9200) relative to where we started at 0
-            encoderMoveLift(-7600,1,5);
+            encoderMoveLift(-8000,1,5);
             robottelemetry.addData("Lift Current Position",  "Target :%7d", motorLift.getCurrentPosition());
             //encoderExtender(700, 1, 5);
             robottelemetry.addData("Extender Position",  "Target :%7d", motorExtend.getCurrentPosition());
             //Lower for drive
+            hitchServo.setPosition(1);
             robottelemetry.update();
             lower = true;
-            hitchServo.setPosition(1);
+            //hitchServo.setPosition(1);
 
         }
     }

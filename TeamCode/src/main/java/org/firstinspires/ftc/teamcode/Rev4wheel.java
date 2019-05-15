@@ -72,7 +72,8 @@ public class Rev4wheel extends LinearOpMode {
         //Reverse wheels on the one side
         motorRightRear.setDirection(DcMotor.Direction.REVERSE);
         motorRightFront.setDirection(DcMotor.Direction.REVERSE);
-        motorExtend.setDirection(DcMotor.Direction.REVERSE);
+        //motorExtend.setDirection(DcMotor.Direction.REVERSE);
+        motorLift.setDirection(DcMotor.Direction.REVERSE);
         dropBeaconServo.setDirection(Servo.Direction.REVERSE);
         motorCollect = hardwareMap.get(DcMotor.class, "motorCollect");
         telemetry.addData("Status", "Initialized");

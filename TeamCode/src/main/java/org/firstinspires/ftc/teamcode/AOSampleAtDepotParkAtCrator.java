@@ -18,7 +18,7 @@ import java.util.Locale;
 
 //This OpMode Sample across the Depot, Drive back to the Crator and Park again at the Crator from the side
 // This second most longest OpMode
-@Autonomous(name = "AOSampleAtCraterDropBeaconParkCrator", group = "AutoOp")
+@Autonomous(name = "AOSampleAtDepotPark", group = "AutoOp")
 public class AOSampleAtDepotParkAtCrator extends LinearOpMode {
     public static final String TAG = "Vuforia VuMark Sample";
 
@@ -190,7 +190,7 @@ public class AOSampleAtDepotParkAtCrator extends LinearOpMode {
                                 //Move a bit forward to make sure if we drop the mineral its completely moved
                                 robot.encoderDriveStraight(0.6, 50, 4);
                                 //Lift the arm up
-                                robot.encoderMoveLift(-1200, 1, 3);
+                                robot.encoderMoveLift(1200, 1, 3);
                                 //Distances and headings need to be Tested and validated
                                 //Reverse a bit to miss the Silver
                                 robot.encoderDriveStraight(0.6, -50, 4);
@@ -211,7 +211,7 @@ public class AOSampleAtDepotParkAtCrator extends LinearOpMode {
                                 //Move a bit forward to make sure if we drop the mineral its completely moved
                                 robot.encoderDriveStraight(0.6, 50, 4);
                                 //Lift the arm up
-                                robot.encoderMoveLift(-1200, 1, 3);
+                                robot.encoderMoveLift(1200, 1, 3);
                                 //Distances and headings need to be Tested and validated
                                 //Reverse a bit to miss the Silver
                                 robot.encoderDriveStraight(0.6, -50, 4);
@@ -233,7 +233,7 @@ public class AOSampleAtDepotParkAtCrator extends LinearOpMode {
                                 //Move a bit forward to make sure if we drop the mineral its completely moved
                                 robot.encoderDriveStraight(0.6, 50, 4);
                                 //Lift the arm up
-                                robot.encoderMoveLift(-1200, 1, 3);
+                                robot.encoderMoveLift(1200, 1, 3);
                                 //Distances and headings need to be Tested and validated
                                 //Reverse a bit to miss the Silver
                                 robot.encoderDriveStraight(0.6, -50, 4);
@@ -254,7 +254,7 @@ public class AOSampleAtDepotParkAtCrator extends LinearOpMode {
                                 //Move a bit forward to make sure if we drop the mineral its completely moved
                                 robot.encoderDriveStraight(0.6, 50, 4);
                                 //Lift the arm up
-                                robot.encoderMoveLift(-1200, 1, 3);
+                                robot.encoderMoveLift(1200, 1, 3);
                                 //Distances and headings need to be Tested and validated
                                 //Reverse a bit to miss the Silver
                                 robot.encoderDriveStraight(0.6, -50, 4);
@@ -356,8 +356,8 @@ public class AOSampleAtDepotParkAtCrator extends LinearOpMode {
         //Lift and extend
         telemetry.addData("Lift Current Position",  "Target :%7d", robot.motorLift.getCurrentPosition());
         //Negative is Lift -700 Extender +3700
-        robot.encoderMoveLift(-500, 1, 3);
-        robot.encoderExtender(3800,0.8,3);
+        //robot.encoderMoveLift(500, 1, 3);
+        robot.encoderExtender(1700,0.8,3);
         telemetry.update();
     }
 }

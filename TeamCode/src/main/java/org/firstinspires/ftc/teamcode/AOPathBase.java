@@ -28,6 +28,23 @@ public abstract class AOPathBase extends LinearOpMode {
         telemetry.update();
     }
 
+    public void setupCollectorliftarm(){
+
+        robot.motorLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.motorLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.motorExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //robot.motorLift.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        //Lift and extend
+        telemetry.addData("Lift Current Position",  "Target :%7d", robot.motorLift.getCurrentPosition());
+        //Negative is Lift -700 Extender +3700
+        robot.encoderExtender(1700,1,3);
+        robot.encoderMoveLift(-2000, 1, 3);
+
+        telemetry.update();
+    }
+
     //Path when Robot is facing the Crator from Latch
     //Drive from a predefined position, then drop Beacon and Park at the Crator
     //This is the Crator opposite from where the Robot started
