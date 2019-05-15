@@ -19,7 +19,10 @@ public class AODetachTestLanding extends AOPathBase {
         robot.setRobottelemetry(telemetry);
         robot.start();
         this.unhitchRobot();
-        this.dropAndPark(-50,-20);
+        //Test Path 1 (L,C,R)
+        this.dropAndParkCratorSide(-50,-50);
+        //Test Path 2 (L,C,R)
+        //this.dropAndParkDepotSide(-50,-50);
     }
 
 
