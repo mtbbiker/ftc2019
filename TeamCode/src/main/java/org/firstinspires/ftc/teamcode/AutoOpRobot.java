@@ -52,8 +52,6 @@ public class AutoOpRobot extends LinearOpMode {
     boolean lastResetState = false;
     boolean curResetState  = false;
 
-    //private WebcamName webcamName;
-
     private BNO055IMU imu;
 
     private Orientation angles;
@@ -141,10 +139,6 @@ public class AutoOpRobot extends LinearOpMode {
         // on this object to illustrate which interfaces support which functionality.
         //modernRoboticsI2cGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
     }
-
-//    public void initCamera(){
-//        webcamName = masterConfig.get(WebcamName.class, "Webcam 1");
-//    }
 
     public Telemetry getRobottelemetry() {
         return robottelemetry;
@@ -422,13 +416,6 @@ public class AutoOpRobot extends LinearOpMode {
 //        motorCollect.setPower(0);
     }
 
-    public void collectMineralSample(){
-        encoderMoveLift(-2000, 1, 5);
-        encoderExtender(-2600, 1, 5);
-        motorCollect.setPower(0.8);
-        encoderMoveLift(3100, 1, 5);
-        motorCollect.setPower(0);
-    }
 
     private void disableEncoders(){
         motorLeftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -771,31 +758,6 @@ public class AutoOpRobot extends LinearOpMode {
         }
     }
 
-    public void MoveTillEnd() {
-        motorRightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorLeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorRightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorLeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorLeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorRightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorLeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorRightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        double driveDistance1 = 1200 * COUNTS_PER_MM;
-        double startPos1 = motorRightFront.getCurrentPosition();
-        while (motorRightFront.getCurrentPosition() < driveDistance1 + startPos1) {
-            motorLeftFront.setPower(+1);
-            motorLeftRear.setPower(+1);
-            motorRightFront.setPower(+1);
-            motorRightRear.setPower(+1);
-            robottelemetry.addLine("Forward");
-        }
-
-        motorLift.setPower(-1);
-        sleep(2000);
-        motorLift.setPower(0);
-    }
-
     public void stopRobot() {
         motorRightFront.setPower(0);
         motorRightRear.setPower(0);
@@ -914,11 +876,4 @@ public class AutoOpRobot extends LinearOpMode {
         this.gravity = gravity;
     }
 
-//    public WebcamName getWebcamName() {
-//        return webcamName;
-//    }
-//
-//    public void setWebcamName(WebcamName webcamName) {
-//        this.webcamName = webcamName;
-//    }
 }

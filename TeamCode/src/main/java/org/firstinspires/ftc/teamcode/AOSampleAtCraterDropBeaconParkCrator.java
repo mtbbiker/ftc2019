@@ -55,10 +55,9 @@ public class AOSampleAtCraterDropBeaconParkCrator extends LinearOpMode {
              * Retrieve the camera we are to use.
              */
             webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
-            //robot.initCamera();
 
             initVuforia();
-            //sleep(1000);
+
             if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
                 initTfod();
             } else {
@@ -73,7 +72,7 @@ public class AOSampleAtCraterDropBeaconParkCrator extends LinearOpMode {
             waitForStart();
             robot.setRobottelemetry(telemetry);
             robot.start();
-            //unhitchRobot();
+            unhitchRobot();
 
             if (opModeIsActive()) {
                 /** Activate Tensor Flow Object Detection. */
@@ -376,7 +375,7 @@ public class AOSampleAtCraterDropBeaconParkCrator extends LinearOpMode {
         telemetry.update();
     }
 
-    private void setupCollectorliftarm(){
+    public void setupCollectorliftarm(){
 
         robot.motorLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.motorLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -387,8 +386,9 @@ public class AOSampleAtCraterDropBeaconParkCrator extends LinearOpMode {
         //Lift and extend
         telemetry.addData("Lift Current Position",  "Target :%7d", robot.motorLift.getCurrentPosition());
         //Negative is Lift -700 Extender +3700
-        //robot.encoderMoveLift(500, 1, 3);
-        robot.encoderExtender(1700,0.8,3);
+        robot.encoderExtender(1500,1,3);
+        robot.encoderMoveLift(-1650, 1, 3);
+
         telemetry.update();
     }
 }

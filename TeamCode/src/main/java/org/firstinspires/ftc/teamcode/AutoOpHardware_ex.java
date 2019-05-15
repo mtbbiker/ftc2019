@@ -25,7 +25,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * Created by Edrich on 2018/03/31.
  */
 
-public class AutoOpHardware extends LinearOpMode{
+public class AutoOpHardware_ex extends LinearOpMode{
     public DcMotor DriveFrontLeft= null;
     public DcMotor DriveFrontRight= null;
     public DcMotor DriveBackRight= null;
@@ -69,7 +69,7 @@ public class AutoOpHardware extends LinearOpMode{
     private ElapsedTime period = new ElapsedTime();
 
 
-    public AutoOpHardware(){
+    public AutoOpHardware_ex(){
 
     }
 

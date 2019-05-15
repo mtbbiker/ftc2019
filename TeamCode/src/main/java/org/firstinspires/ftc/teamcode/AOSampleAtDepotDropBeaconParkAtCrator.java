@@ -74,7 +74,7 @@ public class AOSampleAtDepotDropBeaconParkAtCrator extends LinearOpMode {
             waitForStart();
             robot.setRobottelemetry(telemetry);
             robot.start();
-            //unhitchRobot();
+            unhitchRobot();
             setupCollectorliftarm();
 
             if (opModeIsActive()) {
@@ -326,8 +326,9 @@ public class AOSampleAtDepotDropBeaconParkAtCrator extends LinearOpMode {
         //Lift and extend
         telemetry.addData("Lift Current Position",  "Target :%7d", robot.motorLift.getCurrentPosition());
         //Negative is Lift -700 Extender +3700
-        //robot.encoderMoveLift(500, 1, 3);
-        robot.encoderExtender(1700,0.8,3);
+        robot.encoderExtender(1500,1,3);
+        robot.encoderMoveLift(-1650, 1, 3);
+
         telemetry.update();
     }
 }
