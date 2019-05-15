@@ -401,7 +401,7 @@ public class AutoOpRobot extends LinearOpMode {
             //} while (hitchServo.getPosition() != 0);
             sleep(1000);
             //Move lift to horizontal (make sure position is not Reset, this is a differential from current position (9200) relative to where we started at 0
-            encoderMoveLift(-8000,1,5);
+            encoderMoveLift(-7900,1,5);
             robottelemetry.addData("Lift Current Position",  "Target :%7d", motorLift.getCurrentPosition());
             //encoderExtender(700, 1, 5);
             robottelemetry.addData("Extender Position",  "Target :%7d", motorExtend.getCurrentPosition());

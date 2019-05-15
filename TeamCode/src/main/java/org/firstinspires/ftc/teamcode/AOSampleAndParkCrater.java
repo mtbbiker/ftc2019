@@ -190,52 +190,49 @@ public class AOSampleAndParkCrater extends LinearOpMode {
                             case LEFT:
                                 //setupCollectorliftarm();
                                 robot.rotate(-1 * (int) Math.round(detected.targetHeading), 0.6);
-                                robot.encoderDriveStraight(0.6, 500, 4);
                                 robot.sampleMineral();
+                                robot.encoderDriveStraight(0.8, 500, 4);
                                 //Move a bit forward to make sure if we drop the mineral its completely moved
-                                robot.encoderDriveStraight(0.6, 50, 4);
-                                //Turn a bit right to make sure we are over the crator
-                                robot.rotate(-5,0.5);
+                                robot.encoderDriveStraight(0.8, 50, 4);
                                 //Lift the arm up
-                                robot.encoderMoveLift(900, 1, 3);
+                                robot.encoderMoveLift(1000, 1, 3);
+                                //Turn a bit right to make sure we are over the crator
+                                robot.rotate(-5,0.8);
                                 //Drive to Crator to park
-                                robot.encoderDriveStraight(0.5,150,3);
+                                robot.encoderDriveStraight(0.5,50,3);
                                 break;
                             case CENTER:
                                 //setupCollectorliftarm();
-                                robot.encoderDriveStraight(0.6, 500, 4);
                                 robot.sampleMineral();
+                                robot.encoderDriveStraight(0.8, 500, 4);
                                 //Move a bit forward to make sure if we drop the mineral its completely moved
-                                robot.encoderDriveStraight(0.6, 50, 4);
+                                robot.encoderDriveStraight(0.8, 50, 4);
                                 //Lift the arm up
-                                robot.encoderMoveLift(900, 1, 3);
+                                robot.encoderMoveLift(1000, 1, 3);
                                 //Drive to Crator to park
-                                robot.encoderDriveStraight(0.5,150,3);
+                                robot.encoderDriveStraight(0.5,100,3);
                                 break;
                             case RIGHT:
                                 //setupCollectorliftarm();
                                 robot.rotate(-16, 0.6);
-                                robot.encoderDriveStraight(0.6, 500, 4);
                                 robot.sampleMineral();
-                                //Turn a bit left to make sure we are over the crator
-                                robot.rotate(5,0.5);
-                                //Move a bit forward to make sure if we drop the mineral its completely moved
-                                robot.encoderDriveStraight(0.6, 50, 4);
+                                //Turn a bit left to make sure we are over the crater
+                                robot.encoderDriveStraight(0.8, 500, 4);
                                 //Lift the arm up
-                                robot.encoderMoveLift(900, 1, 3);
+                                robot.encoderMoveLift(1000, 1, 3);
+                                robot.rotate(5,0.5);
                                 //Drive to Crator to park
-                                robot.encoderDriveStraight(0.5,150,3);
+                                robot.encoderDriveStraight(0.8,100,3);
                                 break;
                             default://Move to the center
-                                setupCollectorliftarm();
-                                robot.encoderDriveStraight(0.6, 500, 4);
                                 robot.sampleMineral();
+                                robot.encoderDriveStraight(0.8, 500, 4);
                                 //Move a bit forward to make sure if we drop the mineral its completely moved
-                                robot.encoderDriveStraight(0.6, 50, 4);
+                                robot.encoderDriveStraight(0.8, 50, 4);
                                 //Lift the arm up
-                                robot.encoderMoveLift(900, 1, 3);
+                                robot.encoderMoveLift(1000, 1, 3);
                                 //Drive to Crator to park
-                                robot.encoderDriveStraight(0.5,150,3);
+                                robot.encoderDriveStraight(0.5,100,3);
                                 break;
                         }
                     }
@@ -325,8 +322,9 @@ public class AOSampleAndParkCrater extends LinearOpMode {
         //Lift and extend
         telemetry.addData("Lift Current Position",  "Target :%7d", robot.motorLift.getCurrentPosition());
         //Negative is Lift -700 Extender +3700
-        //robot.encoderMoveLift(500, 1, 3);
-        robot.encoderExtender(1700,0.8,3);
+        robot.encoderExtender(1500,1,3);
+        robot.encoderMoveLift(-1650, 1, 3);
+
         telemetry.update();
     }
 }
