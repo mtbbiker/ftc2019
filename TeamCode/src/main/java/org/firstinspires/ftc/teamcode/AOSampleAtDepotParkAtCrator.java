@@ -186,28 +186,28 @@ public class AOSampleAtDepotParkAtCrator extends LinearOpMode {
                         {
                             case LEFT:
                                 robot.encoderDriveStraight(1,150,3);
-                                robot.rotate(-1 * (int) Math.round(detected.targetHeading), 1);
+                                robot.rotate(10,1);//-1 * (int) Math.round(detected.targetHeading), 1);
                                 robot.sampleMineral();
                                 robot.encoderDriveStraight(1, 500, 4);
                                 //Move a bit forward to make sure if we drop the mineral its completely moved
                                 //robot.encoderDriveStraight(1, 50, 4);
                                 //Lift the arm up
-                                robot.encoderMoveLift(2500, 1, 3);
+                                robot.encoderMoveLift(2900, 1, 3);
                                 //Distances and headings need to be Tested and validated
                                 //Reverse a bit to miss the Silver
                                 robot.encoderDriveStraight(1, 400, 4);
                                 robot.motorCollect.setPower(0);
                                 //Turn Right towards crater
-                                robot.rotate(-45,1);
+                                robot.rotate(-10,1);
                                 //Drive to Crator
-                                robot.encoderDriveStraight(1,200,4);
+                                robot.encoderDriveStraight(1,250,4);
                                 //Make another turn
-                                robot.rotate(-45,1);
+                                robot.rotate(-90,1);
                                 //drop
-                                robot.motorCollect.setPower(0);
-                                robot.rotate(-45,1);
+                                robot.dropBeacon(2);
+                                robot.rotate(-80,1);
                                 //Drive to Crator
-                                robot.encoderDriveStraight(1,200,4);
+                                robot.encoderDriveStraight(1,1500,6);
                                 //We might need to extend and lift, but we will Test first
                                 break;
                             case CENTER:
@@ -217,7 +217,7 @@ public class AOSampleAtDepotParkAtCrator extends LinearOpMode {
                                 //Move a bit forward to make sure if we drop the mineral its completely moved
                                 //robot.encoderDriveStraight(1, 50, 4);
                                 //Lift the arm up
-                                robot.encoderMoveLift(2400, 1, 3);
+                                robot.encoderMoveLift(2500, 1, 3);
                                 //Distances and headings need to be Tested and validated
                                 //Reverse a bit to miss the Silver
                                 robot.encoderDriveStraight(1, 650, 4);

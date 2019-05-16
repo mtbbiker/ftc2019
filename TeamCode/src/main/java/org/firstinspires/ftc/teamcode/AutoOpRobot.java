@@ -30,6 +30,7 @@ public class AutoOpRobot extends LinearOpMode {
     public DcMotor motorExtend;
     public Servo hitchServo;
     public Servo dropBeaconServo;
+    public Servo collectorStop;
 
     boolean lower = false;
     boolean pit = false;
@@ -112,8 +113,13 @@ public class AutoOpRobot extends LinearOpMode {
         motorExtend.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         dropBeaconServo = masterConfig.servo.get("DropBeaconServo");
+        collectorStop = masterConfig.servo.get("CollectorStopServo");
+
+        //collectorStop.setDirection(Servo.Direction.REVERSE);
 
         dropBeaconServo.setPosition(0.5);
+
+        collectorStop.setPosition(0.3);
 
         //webcamName = masterConfig.get(WebcamName.class, "Webcam 1");
 
@@ -385,7 +391,7 @@ public class AutoOpRobot extends LinearOpMode {
             //as an alternative keep a global variable for positions for each motor
 
             robottelemetry.addData("Lift Current Position",  "Target :%7d", motorLift.getCurrentPosition());
-            encoderMoveLift(10500, 1, 5);
+            encoderMoveLift(10800, 1, 5);
             robottelemetry.update();
             robottelemetry.addData("Extender Position",  "Target :%7d", motorExtend.getCurrentPosition());
             encoderExtender(2100, 1, 5);
