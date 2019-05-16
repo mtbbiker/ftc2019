@@ -185,65 +185,80 @@ public class AOSampleAtDepotParkAtCrator extends LinearOpMode {
                         switch (detected.position)
                         {
                             case LEFT:
+                                robot.encoderDriveStraight(1,150,3);
                                 robot.rotate(-1 * (int) Math.round(detected.targetHeading), 1);
                                 robot.sampleMineral();
                                 robot.encoderDriveStraight(1, 500, 4);
                                 //Move a bit forward to make sure if we drop the mineral its completely moved
                                 //robot.encoderDriveStraight(1, 50, 4);
                                 //Lift the arm up
-                                robot.encoderMoveLift(1200, 1, 3);
+                                robot.encoderMoveLift(2500, 1, 3);
                                 //Distances and headings need to be Tested and validated
                                 //Reverse a bit to miss the Silver
-                                robot.encoderDriveStraight(1, -50, 4);
+                                robot.encoderDriveStraight(1, 400, 4);
+                                robot.motorCollect.setPower(0);
                                 //Turn Right towards crater
-                                robot.rotate((90 - (abs((int) Math.round(detected.targetHeading)))),1);
+                                robot.rotate(-45,1);
                                 //Drive to Crator
                                 robot.encoderDriveStraight(1,200,4);
                                 //Make another turn
-                                robot.rotate(45,1);
+                                robot.rotate(-45,1);
+                                //drop
+                                robot.motorCollect.setPower(0);
+                                robot.rotate(-45,1);
                                 //Drive to Crator
                                 robot.encoderDriveStraight(1,200,4);
                                 //We might need to extend and lift, but we will Test first
                                 break;
                             case CENTER:
-                                robot.encoderDriveStraight(1, 500, 4);
+                                robot.encoderDriveStraight(1,150,3);
+                                robot.encoderDriveStraight(1, 600, 4);
                                 robot.sampleMineral();
                                 //Move a bit forward to make sure if we drop the mineral its completely moved
                                 //robot.encoderDriveStraight(1, 50, 4);
                                 //Lift the arm up
-                                robot.encoderMoveLift(1200, 1, 3);
+                                robot.encoderMoveLift(2400, 1, 3);
                                 //Distances and headings need to be Tested and validated
                                 //Reverse a bit to miss the Silver
-                                robot.encoderDriveStraight(1, -50, 4);
+                                robot.encoderDriveStraight(1, 650, 4);
+                                robot.motorCollect.setPower(0);
                                 //Turn Right towards crater
-                                robot.rotate(90 ,1);
-                                //Drive to Crator
-                                robot.encoderDriveStraight(1,200,4);
+                                robot.rotate(-90 ,0.7);
+                                robot.dropBeacon(2);
+                                robot.encoderDriveStraight(1,400,4);
                                 //Make another turn
-                                robot.rotate(45,1);
+                                robot.rotate(-11,0.7);
                                 //Drive to Crator
-                                robot.encoderDriveStraight(1,200,4);
+                                robot.encoderDriveStraight(1,1500,4);
                                 //We might need to extend and lift, but we will Test first
                                 break;
                             case RIGHT:
-                                robot.rotate(-16, 1);
+                                robot.encoderDriveStraight(1,150,3);
+                                robot.rotate(-10, 1);
                                 robot.sampleMineral();
                                 robot.encoderDriveStraight(1, 500, 4);
                                 //Move a bit forward to make sure if we drop the mineral its completely moved
                                 //robot.encoderDriveStraight(1, 50, 4);
                                 //Lift the arm up
-                                robot.encoderMoveLift(1200, 1, 3);
+                                robot.encoderMoveLift(2500, 1, 3);
                                 //Distances and headings need to be Tested and validated
                                 //Reverse a bit to miss the Silver
-                                robot.encoderDriveStraight(0.6, -50, 4);
+                                robot.encoderDriveStraight(1, 200, 4);
+                                robot.motorCollect.setPower(0);
+                                //rotate
+                                robot.rotate((25 ),1);
+
+                                robot.encoderDriveStraight(1, 550, 4);
+                                robot.rotate((-35 ),1);
+                                robot.dropBeacon(2);
                                 //Turn Right towards crater
-                                robot.rotate((90 + 16 ),1);
+                                robot.rotate((-62 ),1);
                                 //Drive to Crator
-                                robot.encoderDriveStraight(1,200,4);
+                                robot.encoderDriveStraight(1,1600,7);
                                 //Make another turn
-                                robot.rotate(45,1);
+                                //robot.rotate(45,1);
                                 //Drive to Crator
-                                robot.encoderDriveStraight(1,200,4);
+                                //robot.encoderDriveStraight(1,200,4);
                                 //We might need to extend and lift, but we will Test first
                                 break;
                             default://Move to the center
