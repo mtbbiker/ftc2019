@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Locale;
 
 //This OpMode Sample across the Depot, Drop the Beacon and Park again at the Crator from the side
-@Disabled
+//@Disabled
 // This is the longest route and might be short on time
 @Autonomous(name = "3_SampleAtDepotDrpBeaconPark", group = "AutoOp")
 public class AOSampleAtDepotDropBeaconParkAtCrator extends LinearOpMode {
@@ -173,6 +173,8 @@ public class AOSampleAtDepotDropBeaconParkAtCrator extends LinearOpMode {
                         }
                     }
 
+                    double DRIVE_SPEED =1 ;
+                    double ROTATE_POWER = 1;
                     if(sampledetected){
                         //Sample and add Path and Park in Crator
                         telemetry.addData("Moving to Mineral!", "Hdng,Pos:(" + detected.targetHeading + "),(" + detected.position + ")");
@@ -181,66 +183,171 @@ public class AOSampleAtDepotDropBeaconParkAtCrator extends LinearOpMode {
                         //2. Setup collector and drive towards sample
                         //3. Turn to avoid Silver
                         //4. Lift Arm to fit over crator
-                        //5. Drive and Park
+                        //5. Drive and Drop Beacon
+                        //6. Drive to Crater
                         switch (detected.position)
                         {
-                            case LEFT:
-
-                                //setupCollectorliftarm();
-                                robot.rotate(-1 * (int) Math.round(detected.targetHeading), 0.6);
-                                robot.encoderDriveStraight(0.6, 500, 4);
+                            case LEFT: // Park at the Left Neutral Crater
+                                robot.encoderDriveStraight(DRIVE_SPEED,150,3);
+                                robot.rotate(10,ROTATE_POWER);//-1 * (int) Math.round(detected.targetHeading), 1);
                                 robot.sampleMineral();
+                                robot.encoderDriveStraight(DRIVE_SPEED, 500, 4);
                                 //Move a bit forward to make sure if we drop the mineral its completely moved
-                                robot.encoderDriveStraight(0.6, 50, 4);
+                                //robot.encoderDriveStraight(1, 50, 4);
                                 //Lift the arm up
-                                robot.encoderMoveLift(1200, 1, 3);
+                                robot.encoderMoveLift(2900, DRIVE_SPEED, 3);
                                 //Distances and headings need to be Tested and validated
                                 //Reverse a bit to miss the Silver
-                                robot.encoderDriveStraight(0.6, -50, 4);
-                                //Turn Right towards crator
-                                robot.rotate(-90,0.6);
+                                robot.encoderDriveStraight(DRIVE_SPEED, 400, 4);
+                                robot.motorCollect.setPower(0);
+                                //Turn Right towards crater
+                                robot.rotate(-10,ROTATE_POWER);
                                 //Drive to Crator
-                                robot.encoderDriveStraight(0.8,200,4);
+                                robot.encoderDriveStraight(DRIVE_SPEED,250,4);
                                 //Make another turn
-                                robot.rotate(-45,0.6);
+                                robot.rotate(-90,ROTATE_POWER);
+                                //drop
+                                robot.dropBeacon(2);
+                                robot.rotate(-80,ROTATE_POWER);
                                 //Drive to Crator
-                                robot.encoderDriveStraight(0.8,200,4);
+                                robot.encoderDriveStraight(DRIVE_SPEED,1500,6);
                                 //We might need to extend and lift, but we will Test first
                                 break;
-                            case CENTER:
-                                //setupCollectorliftarm();
-                                robot.encoderDriveStraight(0.6, 500, 4);
+                            case CENTER: //Park at the  Right Crater
+                                robot.encoderDriveStraight(DRIVE_SPEED,150,3);
                                 robot.sampleMineral();
+                                robot.encoderDriveStraight(DRIVE_SPEED, 600, 4);
                                 //Move a bit forward to make sure if we drop the mineral its completely moved
-                                robot.encoderDriveStraight(0.6, 50, 4);
+                                //robot.encoderDriveStraight(1, 50, 4);
                                 //Lift the arm up
-                                robot.encoderMoveLift(900, 1, 3);
-                                //TODO : Add Path to Beacon and Crator
+                                robot.encoderMoveLift(2500, DRIVE_SPEED, 3);
+                                //Distances and headings need to be Tested and validated
+                                //Reverse a bit to miss the Silver
+                                robot.encoderDriveStraight(DRIVE_SPEED, 650, 4);
+                                robot.motorCollect.setPower(0);
+                                //Turn Right towards crater
+                                robot.rotate(-90 ,0.7);
+                                robot.dropBeacon(2);
+                                robot.encoderDriveStraight(DRIVE_SPEED,400,4);
+                                //Make another turn
+                                robot.rotate(-11,0.7);
+                                //Drive to Crator
+                                robot.encoderDriveStraight(DRIVE_SPEED,1500,4);
+                                //We might need to extend and lift, but we will Test first
                                 break;
-                            case RIGHT:
-                                //setupCollectorliftarm();
-                                robot.rotate(-16, 0.6);
-                                robot.encoderDriveStraight(0.6, 500, 4);
+                            case RIGHT: //Park at the Right Crater
+                                robot.encoderDriveStraight(DRIVE_SPEED,150,3);
+                                robot.rotate(-10, ROTATE_POWER);
                                 robot.sampleMineral();
+                                robot.encoderDriveStraight(DRIVE_SPEED, 500, 4);
                                 //Move a bit forward to make sure if we drop the mineral its completely moved
-                                robot.encoderDriveStraight(0.6, 50, 4);
+                                //robot.encoderDriveStraight(1, 50, 4);
                                 //Lift the arm up
-                                robot.encoderMoveLift(900, 1, 3);
-                                //Drive to Crator to park
-                                //TODO : Add Path to Beacon and Crator
+                                robot.encoderMoveLift(2500, DRIVE_SPEED, 3);
+                                //Distances and headings need to be Tested and validated
+                                //Reverse a bit to miss the Silver
+                                robot.encoderDriveStraight(DRIVE_SPEED, 200, 4);
+                                robot.motorCollect.setPower(0);
+                                //rotate
+                                robot.rotate((25 ),ROTATE_POWER);
+
+                                robot.encoderDriveStraight(DRIVE_SPEED, 550, 4);
+                                robot.rotate((-35 ),ROTATE_POWER);
+                                robot.dropBeacon(2);
+                                //Turn Right towards crater
+                                robot.rotate((-62 ),ROTATE_POWER);
+                                //Drive to Crator
+                                robot.encoderDriveStraight(DRIVE_SPEED,1600,7);
+                                //Make another turn
+                                //robot.rotate(45,1);
+                                //Drive to Crator
+                                //robot.encoderDriveStraight(1,200,4);
+                                //We might need to extend and lift, but we will Test first
                                 break;
                             default://Move to the center
-                                //setupCollectorliftarm();
-                                robot.encoderDriveStraight(0.6, 500, 4);
+                                robot.encoderDriveStraight(DRIVE_SPEED,150,3);
                                 robot.sampleMineral();
+                                robot.encoderDriveStraight(DRIVE_SPEED, 600, 4);
+
                                 //Move a bit forward to make sure if we drop the mineral its completely moved
-                                robot.encoderDriveStraight(0.6, 50, 4);
+                                //robot.encoderDriveStraight(1, 50, 4);
                                 //Lift the arm up
-                                robot.encoderMoveLift(900, 1, 3);
-                                //Drive to Crator to park
-                                //TODO : Add Path to Beacon and Crator
+                                robot.encoderMoveLift(2500, DRIVE_SPEED, 3);
+                                //Distances and headings need to be Tested and validated
+                                //Reverse a bit to miss the Silver
+                                robot.encoderDriveStraight(DRIVE_SPEED, 650, 4);
+                                robot.motorCollect.setPower(0);
+                                //Turn Right towards crater
+                                robot.rotate(-90 ,0.7);
+                                robot.dropBeacon(2);
+                                robot.encoderDriveStraight(DRIVE_SPEED,400,4);
+                                //Make another turn
+                                robot.rotate(-11,0.7);
+                                //Drive to Crator
+                                robot.encoderDriveStraight(DRIVE_SPEED,1500,4);
+                                //We might need to extend and lift, but we will Test first
                                 break;
                         }
+
+//                        switch (detected.position)
+//                        {
+//                            case LEFT:
+//
+//                                //setupCollectorliftarm();
+//                                robot.rotate(-1 * (int) Math.round(detected.targetHeading), 0.6);
+//                                robot.encoderDriveStraight(0.6, 500, 4);
+//                                robot.sampleMineral();
+//                                //Move a bit forward to make sure if we drop the mineral its completely moved
+//                                robot.encoderDriveStraight(0.6, 50, 4);
+//                                //Lift the arm up
+//                                robot.encoderMoveLift(1200, 1, 3);
+//                                //Distances and headings need to be Tested and validated
+//                                //Reverse a bit to miss the Silver
+//                                robot.encoderDriveStraight(0.6, -50, 4);
+//                                //Turn Right towards crator
+//                                robot.rotate(-90,0.6);
+//                                //Drive to Crator
+//                                robot.encoderDriveStraight(0.8,200,4);
+//                                //Make another turn
+//                                robot.rotate(-45,0.6);
+//                                //Drive to Crator
+//                                robot.encoderDriveStraight(0.8,200,4);
+//                                //We might need to extend and lift, but we will Test first
+//                                break;
+//                            case CENTER:
+//                                //setupCollectorliftarm();
+//                                robot.encoderDriveStraight(0.6, 500, 4);
+//                                robot.sampleMineral();
+//                                //Move a bit forward to make sure if we drop the mineral its completely moved
+//                                robot.encoderDriveStraight(0.6, 50, 4);
+//                                //Lift the arm up
+//                                robot.encoderMoveLift(900, 1, 3);
+//                                //TODO : Add Path to Beacon and Crator
+//                                break;
+//                            case RIGHT:
+//                                //setupCollectorliftarm();
+//                                robot.rotate(-16, 0.6);
+//                                robot.encoderDriveStraight(0.6, 500, 4);
+//                                robot.sampleMineral();
+//                                //Move a bit forward to make sure if we drop the mineral its completely moved
+//                                robot.encoderDriveStraight(0.6, 50, 4);
+//                                //Lift the arm up
+//                                robot.encoderMoveLift(900, 1, 3);
+//                                //Drive to Crator to park
+//                                //TODO : Add Path to Beacon and Crator
+//                                break;
+//                            default://Move to the center
+//                                //setupCollectorliftarm();
+//                                robot.encoderDriveStraight(0.6, 500, 4);
+//                                robot.sampleMineral();
+//                                //Move a bit forward to make sure if we drop the mineral its completely moved
+//                                robot.encoderDriveStraight(0.6, 50, 4);
+//                                //Lift the arm up
+//                                robot.encoderMoveLift(900, 1, 3);
+//                                //Drive to Crator to park
+//                                //TODO : Add Path to Beacon and Crator
+//                                break;
+//                        }
                     }
                 }
             }
