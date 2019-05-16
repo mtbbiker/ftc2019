@@ -22,7 +22,7 @@ import java.util.Locale;
 // 1. Sample Mineral opposite the Crator
 // 2. Park at the Crator, avoiding Silver Minerals
 //@Disabled
-@Autonomous(name = "AOSampleAtCratorAndPark", group = "AutoOp")
+@Autonomous(name = "1_SampleAtCratorAndPark", group = "AutoOp")
 public class AOSampleAndParkCrater extends LinearOpMode {
 
     public static final String TAG = "Vuforia VuMark Sample";

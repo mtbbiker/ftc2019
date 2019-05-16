@@ -5,7 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 //Simple Mode to Detach from Lander to determine position for other AutoModes
-@Autonomous(name = "AODetachTestLanding", group = "AutoOp")
+//@Disabled
+@Autonomous(name = "Exp_DetachTestLanding", group = "AutoOp")
 public class AODetachTestLanding extends AOPathBase {
 
     //AutoOpRobot robot = new AutoOpRobot();

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -17,8 +18,9 @@ import java.util.List;
 import java.util.Locale;
 
 //This OpMode Sample across the Depot, Drop the Beacon and Park again at the Crator from the side
+@Disabled
 // This is the longest route and might be short on time
-@Autonomous(name = "AOSampleAtDepotDrpBeaconPark", group = "AutoOp")
+@Autonomous(name = "3_SampleAtDepotDrpBeaconPark", group = "AutoOp")
 public class AOSampleAtDepotDropBeaconParkAtCrator extends LinearOpMode {
     public static final String TAG = "Vuforia VuMark Sample";
 
