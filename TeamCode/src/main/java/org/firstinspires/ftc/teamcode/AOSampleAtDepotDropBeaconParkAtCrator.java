@@ -214,7 +214,7 @@ public class AOSampleAtDepotDropBeaconParkAtCrator extends LinearOpMode {
                                 robot.dropBeacon(2);
                                 robot.rotate(-80,ROTATE_POWER);
                                 //Drive to Crator
-                                robot.encoderDriveStraight(DRIVE_SPEED,1500,6);
+                                robot.encoderDriveStraight(DRIVE_SPEED,1600,6);
                                 break;
                             case CENTER: //Park at the  Right Crater
                                 robot.encoderDriveStraight(DRIVE_SPEED,150,3);
