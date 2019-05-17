@@ -417,7 +417,7 @@ public class AutoOpRobot extends LinearOpMode {
     public void sampleMineral(){
         //encoderMoveLift(2000, 1, 5);
         //encoderExtender(-260, 1, 5);
-        motorCollect.setPower(0.8);
+        motorCollect.setPower(0.6);
 //        encoderMoveLift(3100, 1, 5);
 //        motorCollect.setPower(0);
     }
