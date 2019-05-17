@@ -19,6 +19,7 @@ import java.util.Locale;
 import static java.lang.Math.abs;
 
 //This OpMode Sample across the Depot, Drive back to the Left of the Depot Crater
+// Similiar to Mode 2, but Park for all sample positions at the same crater
 // Was intended to only sample and Park
 // But as in Mode 3 there is time to Drop Beacon
 @Autonomous(name = "2_SampleAtDepotPark", group = "AutoOp")
@@ -232,13 +233,15 @@ public class AOSampleAtDepotParkAtCrator extends LinearOpMode {
                                 robot.encoderMoveLift(2500, DRIVE_SPEED, 3);
                                 robot.motorCollect.setPower(0);
                                 robot.encoderDriveStraight(DRIVE_SPEED, 650, 4);
-                                //Turn Right towards crater
+                                //Turn to Reverse and Drop
                                 robot.rotate(-90 ,0.7); //-90 Right Turn
+                                robot.encoderDriveStraight(DRIVE_SPEED,-200,3);
                                 robot.dropBeacon(2);
 
-                                robot.rotate(-90 ,ROTATE_POWER); //-90 Right Turn
+                                //Start the Path to the Crater
+                                //robot.rotate(-90 ,ROTATE_POWER); //-90 Right Turn
                                 //Again
-                                robot.rotate(-90 ,ROTATE_POWER); //-90 Right Turn
+                                //robot.rotate(-90 ,ROTATE_POWER); //-90 Right Turn
                                 //Move closer
                                 //Turn Left
                                 //Drive Full
@@ -255,26 +258,30 @@ public class AOSampleAtDepotParkAtCrator extends LinearOpMode {
                                 robot.encoderDriveStraight(DRIVE_SPEED,150,3);
                                 robot.rotate(-10, DRIVE_SPEED);
                                 robot.sampleMineral();
-                                robot.encoderDriveStraight(DRIVE_SPEED, 500, 4);
-                                //Move a bit forward to make sure if we drop the mineral its completely moved
+                                robot.encoderDriveStraight(DRIVE_SPEED, 600, 4);
                                 //Lift the arm up
                                 robot.encoderMoveLift(2500, DRIVE_SPEED, 3);
                                 robot.motorCollect.setPower(0);
-                                robot.encoderDriveStraight(DRIVE_SPEED, 200, 4);
-                                //rotate
-                                robot.rotate((25 ),ROTATE_POWER);
-
-                                robot.encoderDriveStraight(DRIVE_SPEED, 550, 4);
-                                robot.rotate((-35 ),ROTATE_POWER);
+                                robot.encoderDriveStraight(DRIVE_SPEED, 650, 4);
+                                //Turn to Reverse and Drop
+                                robot.rotate(-90 ,0.7); //-90 Right Turn
+                                robot.encoderDriveStraight(DRIVE_SPEED,-200,3);
                                 robot.dropBeacon(2);
-                                //Turn Right towards crater
-//                                robot.rotate((-62 ),ROTATE_POWER);
-//                                //Drive to Crator
-//                                robot.encoderDriveStraight(DRIVE_SPEED,1600,7);
+
+                                //Start the Path to the Crater
+                                //robot.rotate(-90 ,ROTATE_POWER); //-90 Right Turn
+                                //Again
+                                //robot.rotate(-90 ,ROTATE_POWER); //-90 Right Turn
+                                //Move closer
+                                //Turn Left
+                                //Drive Full
+
+                                //Finish from here
+//                                robot.encoderDriveStraight(DRIVE_SPEED,400,4);
 //                                //Make another turn
-//                                //robot.rotate(45,1);
+//                                robot.rotate(-11,0.7);
 //                                //Drive to Crator
-//                                //robot.encoderDriveStraight(1,200,4);
+//                                robot.encoderDriveStraight(DRIVE_SPEED,1500,4);
 //                                //We might need to extend and lift, but we will Test first
                                 break;
                             default://Move to the center
