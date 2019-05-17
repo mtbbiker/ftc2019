@@ -17,7 +17,8 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import java.util.List;
 import java.util.Locale;
 
-//This OpMode Sample across the Depot, Drop the Beacon and Park Crator from the Left side the Lander
+//This OpMode Sample across the Depot as Marco, Left stays left, center and Right goes to the Right Crater,
+// Drop the Beacon and Park Crator depending on mineral position
 //@Disabled
 // This is the longest route and might be short on time
 @Autonomous(name = "3_SampleAtDepotDrpBeaconPark", group = "AutoOp")
@@ -199,14 +200,10 @@ public class AOSampleAtDepotDropBeaconParkAtCrator extends LinearOpMode {
                                 robot.rotate(10,ROTATE_POWER);//-1 * (int) Math.round(detected.targetHeading), 1);
                                 robot.sampleMineral();
                                 robot.encoderDriveStraight(DRIVE_SPEED, 500, 4);
-                                //Move a bit forward to make sure if we drop the mineral its completely moved
-                                //robot.encoderDriveStraight(1, 50, 4);
                                 //Lift the arm up
                                 robot.encoderMoveLift(2900, DRIVE_SPEED, 3);
-                                //Distances and headings need to be Tested and validated
-                                //Reverse a bit to miss the Silver
-                                robot.encoderDriveStraight(DRIVE_SPEED, 400, 4);
                                 robot.motorCollect.setPower(0);
+                                robot.encoderDriveStraight(DRIVE_SPEED, 400, 4);
                                 //Turn Right towards crater
                                 robot.rotate(-10,ROTATE_POWER);
                                 //Drive to Crator
@@ -218,20 +215,16 @@ public class AOSampleAtDepotDropBeaconParkAtCrator extends LinearOpMode {
                                 robot.rotate(-80,ROTATE_POWER);
                                 //Drive to Crator
                                 robot.encoderDriveStraight(DRIVE_SPEED,1500,6);
-                                //We might need to extend and lift, but we will Test first
                                 break;
                             case CENTER: //Park at the  Right Crater
                                 robot.encoderDriveStraight(DRIVE_SPEED,150,3);
                                 robot.sampleMineral();
                                 robot.encoderDriveStraight(DRIVE_SPEED, 600, 4);
-                                //Move a bit forward to make sure if we drop the mineral its completely moved
-                                //robot.encoderDriveStraight(1, 50, 4);
                                 //Lift the arm up
                                 robot.encoderMoveLift(2500, DRIVE_SPEED, 3);
-                                //Distances and headings need to be Tested and validated
-                                //Reverse a bit to miss the Silver
-                                robot.encoderDriveStraight(DRIVE_SPEED, 650, 4);
                                 robot.motorCollect.setPower(0);
+                                robot.encoderDriveStraight(DRIVE_SPEED, 650, 4);
+
                                 //Turn Right towards crater
                                 robot.rotate(-90 ,0.7);
                                 robot.dropBeacon(2);
@@ -247,14 +240,11 @@ public class AOSampleAtDepotDropBeaconParkAtCrator extends LinearOpMode {
                                 robot.rotate(-10, ROTATE_POWER);
                                 robot.sampleMineral();
                                 robot.encoderDriveStraight(DRIVE_SPEED, 500, 4);
-                                //Move a bit forward to make sure if we drop the mineral its completely moved
-                                //robot.encoderDriveStraight(1, 50, 4);
                                 //Lift the arm up
                                 robot.encoderMoveLift(2500, DRIVE_SPEED, 3);
-                                //Distances and headings need to be Tested and validated
-                                //Reverse a bit to miss the Silver
-                                robot.encoderDriveStraight(DRIVE_SPEED, 200, 4);
                                 robot.motorCollect.setPower(0);
+                                robot.encoderDriveStraight(DRIVE_SPEED, 200, 4);
+
                                 //rotate
                                 robot.rotate((25 ),ROTATE_POWER);
 
@@ -265,34 +255,27 @@ public class AOSampleAtDepotDropBeaconParkAtCrator extends LinearOpMode {
                                 robot.rotate((-62 ),ROTATE_POWER);
                                 //Drive to Crator
                                 robot.encoderDriveStraight(DRIVE_SPEED,1600,7);
-                                //Make another turn
-                                //robot.rotate(45,1);
-                                //Drive to Crator
-                                //robot.encoderDriveStraight(1,200,4);
-                                //We might need to extend and lift, but we will Test first
                                 break;
                             default://Move to the center
                                 robot.encoderDriveStraight(DRIVE_SPEED,150,3);
+                                robot.rotate(10,ROTATE_POWER);//-1 * (int) Math.round(detected.targetHeading), 1);
                                 robot.sampleMineral();
-                                robot.encoderDriveStraight(DRIVE_SPEED, 600, 4);
-
-                                //Move a bit forward to make sure if we drop the mineral its completely moved
-                                //robot.encoderDriveStraight(1, 50, 4);
+                                robot.encoderDriveStraight(DRIVE_SPEED, 500, 4);
                                 //Lift the arm up
-                                robot.encoderMoveLift(2500, DRIVE_SPEED, 3);
-                                //Distances and headings need to be Tested and validated
-                                //Reverse a bit to miss the Silver
-                                robot.encoderDriveStraight(DRIVE_SPEED, 650, 4);
+                                robot.encoderMoveLift(2900, DRIVE_SPEED, 3);
                                 robot.motorCollect.setPower(0);
+                                robot.encoderDriveStraight(DRIVE_SPEED, 400, 4);
                                 //Turn Right towards crater
-                                robot.rotate(-90 ,0.7);
-                                robot.dropBeacon(2);
-                                robot.encoderDriveStraight(DRIVE_SPEED,400,4);
-                                //Make another turn
-                                robot.rotate(-11,0.7);
+                                robot.rotate(-10,ROTATE_POWER);
                                 //Drive to Crator
-                                robot.encoderDriveStraight(DRIVE_SPEED,1500,4);
-                                //We might need to extend and lift, but we will Test first
+                                robot.encoderDriveStraight(DRIVE_SPEED,250,4);
+                                //Make another turn
+                                robot.rotate(-90,ROTATE_POWER);
+                                //drop
+                                robot.dropBeacon(2);
+                                robot.rotate(-80,ROTATE_POWER);
+                                //Drive to Crator
+                                robot.encoderDriveStraight(DRIVE_SPEED,1500,6);
                                 break;
                         }
 
