@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import java.util.List;
 import java.util.Locale;
 
-//This OpMode Sample across the Depot, Drop the Beacon and Park again at the Crator from the side
+//This OpMode Sample across the Depot, Drop the Beacon and Park Crator from the Left side the Lander
 //@Disabled
 // This is the longest route and might be short on time
 @Autonomous(name = "3_SampleAtDepotDrpBeaconPark", group = "AutoOp")
@@ -54,14 +54,11 @@ public class AOSampleAtDepotDropBeaconParkAtCrator extends LinearOpMode {
 
             telemetry.addData(">", "Wait for initialization");
             telemetry.update();
-            /*
-             * Retrieve the camera we are to use.
-             */
+
             webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
-            //robot.initCamera();
 
             initVuforia();
-            //sleep(1000);
+
             if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
                 initTfod();
             } else {
@@ -88,6 +85,10 @@ public class AOSampleAtDepotDropBeaconParkAtCrator extends LinearOpMode {
                 boolean sampledetected =false;
 
                 while (!sampledetected) {
+
+
+                    double DRIVE_SPEED =1 ;
+                    double ROTATE_POWER = 1;
 
                     if (tfod != null && !sampledetected) {
                         //Scan for Targets
@@ -170,11 +171,17 @@ public class AOSampleAtDepotDropBeaconParkAtCrator extends LinearOpMode {
                                 }
                             }
                             telemetry.update();
+
+                            //Move forward if we only see 1
+                            if(updatedRecognitions.size()<=1){
+                                robot.encoderDriveStraight(DRIVE_SPEED,50,2);
+                                telemetry.addData("Moving Closer to see a bit better, my Dear !", updatedRecognitions.size());
+                                telemetry.update();
+                            }
+
                         }
                     }
 
-                    double DRIVE_SPEED =1 ;
-                    double ROTATE_POWER = 1;
                     if(sampledetected){
                         //Sample and add Path and Park in Crator
                         telemetry.addData("Moving to Mineral!", "Hdng,Pos:(" + detected.targetHeading + "),(" + detected.position + ")");

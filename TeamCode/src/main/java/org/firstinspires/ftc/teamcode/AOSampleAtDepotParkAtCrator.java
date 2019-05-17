@@ -92,14 +92,19 @@ public class AOSampleAtDepotParkAtCrator extends LinearOpMode {
 
                 while (!sampledetected) {
 
+                    double DRIVE_SPEED =1 ;
+                    double ROTATE_POWER = 1;
+
                     if (tfod != null && !sampledetected) {
                         //Scan for Targets
                         // getUpdatedRecognitions() will return null if no new information is available since
                         // the last time that call was made.
                         List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                        if (updatedRecognitions != null) {
+                        if (updatedRecognitions != null)
+                        {
                             telemetry.addData("# Object Detected", updatedRecognitions.size());
-                            if (updatedRecognitions.size() >= 2) {
+                            if (updatedRecognitions.size() >= 2)
+                            {
                                 int goldMineralX = -1;
                                 int silverMineral1X = -1;
                                 int silverMineral2X = -1;
@@ -173,10 +178,17 @@ public class AOSampleAtDepotParkAtCrator extends LinearOpMode {
                                 }
                             }
                             telemetry.update();
+
+                            //Move forward if we only see 1
+                            if(updatedRecognitions.size()<=1)
+                            {
+                                robot.encoderDriveStraight(DRIVE_SPEED,50,2);
+                                telemetry.addData("Moving Closer to see a bit better, my Dear !", updatedRecognitions.size());
+                                telemetry.update();
+                            }
                         }
                     }
-                    double DRIVE_SPEED =1 ;
-                    double ROTATE_POWER = 1;
+
                     if(sampledetected){
                         //Sample and add Path and Park in Crator
                         telemetry.addData("Moving to Mineral!", "Hdng,Pos:(" + detected.targetHeading + "),(" + detected.position + ")");

@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import java.util.List;
 import java.util.Locale;
 
-//This Autonomous Mode will do the Following:
+//This Autonomous Mode will do the Following (It will not Drop a Beacon):
 // 1. Sample Mineral opposite the Crator
 // 2. Park at the Crator, avoiding Silver Minerals
 //@Disabled
@@ -91,6 +91,9 @@ public class AOSampleAndParkCrater extends LinearOpMode {
                 boolean sampledetected =false;
 
                 while (!sampledetected) {
+
+                    double DRIVE_SPEED =1 ;
+                    double ROTATE_POWER = 1;
 
                     if (tfod != null && !sampledetected) {
                         //Scan for Targets
@@ -173,11 +176,16 @@ public class AOSampleAndParkCrater extends LinearOpMode {
                                 }
                             }
                             telemetry.update();
+
+                            //Move forward if we only see 1
+                            if(updatedRecognitions.size()<=1){
+                                robot.encoderDriveStraight(DRIVE_SPEED,50,2);
+                                telemetry.addData("Moving Closer to see a bit better, my Dear !", updatedRecognitions.size());
+                                telemetry.update();
+                            }
                         }
                     }
 
-                    double DRIVE_SPEED =1 ;
-                    double ROTATE_POWER = 1;
                     if(sampledetected){
                         //Sample and add Path and Park in Crator
                         telemetry.addData("Moving to Mineral!", "Hdng,Pos:(" + detected.targetHeading + "),(" + detected.position + ")");
