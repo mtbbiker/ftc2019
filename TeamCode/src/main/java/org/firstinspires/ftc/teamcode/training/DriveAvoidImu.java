@@ -12,6 +12,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -26,7 +27,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 public class DriveAvoidImu extends LinearOpMode
 {
     DcMotor                 leftMotor, rightMotor;
-    TouchSensor             touch;
+    //TouchSensor             touch;
+    DigitalChannel digitalTouch;
     BNO055IMU               imu;
     Orientation             lastAngles = new Orientation();
     double                  globalAngle, power = .30, correction;
@@ -36,8 +38,8 @@ public class DriveAvoidImu extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
-        leftMotor = hardwareMap.dcMotor.get("motorLeftFront");
-        rightMotor = hardwareMap.dcMotor.get("motorRightFront");
+        leftMotor = hardwareMap.dcMotor.get("leftmotor");
+        rightMotor = hardwareMap.dcMotor.get("rightmotor");
 
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
 
@@ -45,7 +47,12 @@ public class DriveAvoidImu extends LinearOpMode
         rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // get a reference to touch sensor.
-        touch = hardwareMap.touchSensor.get("touch_sensor");
+        //touch = hardwareMap.touchSensor.get("touch_sensor");
+        // get a reference to our digitalTouch object.
+        digitalTouch = hardwareMap.get(DigitalChannel.class, "touch_sensor");
+
+        // set the digital channel to input.
+        digitalTouch.setMode(DigitalChannel.Mode.INPUT);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
@@ -99,13 +106,23 @@ public class DriveAvoidImu extends LinearOpMode
             leftMotor.setPower(power - correction);
             rightMotor.setPower(power + correction);
 
+            // send the info back to driver station using telemetry function.
+            // if the digital channel returns true it's HIGH and the button is unpressed.
+            if (digitalTouch.getState() == true) {
+                telemetry.addData("Digital Touch", "Is Not Pressed");
+                touched = false;
+            } else {
+                telemetry.addData("Digital Touch", "Is Pressed");
+                touched = true;
+            }
+
             // We record the sensor values because we will test them in more than
             // one place with time passing between those places. See the lesson on
             // Timing Considerations to know why.
 
             aButton = gamepad1.a;
             bButton = gamepad1.b;
-            touched = touch.isPressed();
+            //touched = touch.isPressed();
 
             if (touched || aButton || bButton)
             {

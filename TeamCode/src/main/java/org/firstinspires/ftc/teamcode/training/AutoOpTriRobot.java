@@ -57,8 +57,8 @@ public class AutoOpTriRobot extends LinearOpMode {
 
         masterConfig = amasterConfig;
 
-        motorLeftFront = masterConfig.get(DcMotor.class, "motorLeftFront");
-        motorRightFront = masterConfig.get(DcMotor.class, "motorRightFront");
+        motorLeftFront = masterConfig.get(DcMotor.class, "leftmotor");
+        motorRightFront = masterConfig.get(DcMotor.class, "rightmotor");
 
         //Set the Direction of the Motors on the right side AFTER THOROUGH INSPECTION of electrics
         motorLeftFront.setDirection(DcMotorSimple.Direction.REVERSE);
