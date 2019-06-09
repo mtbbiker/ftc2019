@@ -25,7 +25,7 @@ public class AutoOpTriRobot extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 28 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 40 ;     // This is < 1.0 if geared UP 40:1 reduce to 160 rpm
+    static final double     DRIVE_GEAR_REDUCTION    = 3.7 ; //40    // This is < 1.0 if geared UP 40:1 reduce to 160 rpm
     static final double     WHEEL_DIAMETER_MM   = 100 ;     // For figuring circumference
     static final double     COUNTS_PER_MM         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_MM * 3.1415);
 
@@ -39,6 +39,9 @@ public class AutoOpTriRobot extends LinearOpMode {
 
     private Orientation angles;
     private Acceleration gravity;
+
+    boolean lastResetState = false;
+    boolean curResetState  = false;
 
     Orientation             lastAngles = new Orientation();
     double                  globalAngle, power = .30, correction;
@@ -167,6 +170,181 @@ public class AutoOpTriRobot extends LinearOpMode {
         motorLeftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorRightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
      }
+
+    /**
+     * @param power Setting to set Robot speed, double from 0 -1
+     * @param distanceMM distance in mm to move
+     * @param timeoutS Safety Timout
+     */
+    public void imuDriveStraight(double power, int distanceMM, double timeoutS){
+
+        int newLeftFrontTarget;
+        int newRightFrontTarget;
+
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            robottelemetry.addData("1 imu heading", lastAngles.firstAngle);
+            robottelemetry.addData("2 correction", correction);
+            robottelemetry.update();
+
+            //leftMotor.setPower(power - correction);
+            //rightMotor.setPower(power + correction);
+
+            //We use Tank Drive in all 4 wheels, so make sure we sent the correct signals to both Left and Right wheels
+            // Determine new target position, and pass to motor controller
+            newLeftFrontTarget = motorLeftFront.getCurrentPosition() + (int)(distanceMM * COUNTS_PER_MM);
+            newRightFrontTarget = motorRightFront.getCurrentPosition() + (int)(distanceMM * COUNTS_PER_MM);
+
+            motorLeftFront.setTargetPosition(newLeftFrontTarget);
+            motorRightFront.setTargetPosition(newRightFrontTarget);
+
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            //Left
+            motorLeftFront.setPower(Math.abs(power ));
+
+            //Right
+            motorRightFront.setPower(Math.abs(power));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits, we should monitor ALL 4
+            //but assume for noe only 2 or monitor 2
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH (actually all 4)  motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+
+            //Only monitor the Back wheels
+            while (opModeIsActive() && (runtime.seconds() < timeoutS) &&  (motorLeftFront.isBusy() ||  motorRightFront.isBusy()))
+            {
+                // Use gyro to drive in a straight line.
+                correction = checkDirection();
+
+                //Get the IMU data, and apply a correction if need
+                motorLeftFront.setPower(Math.abs(power - correction));
+
+                motorRightFront.setPower(Math.abs(power + correction));
+                lastResetState = curResetState;
+                robottelemetry.addData("Path-1",  "Running to Target LF, RF, :%7d :%7d", newLeftFrontTarget,  newRightFrontTarget);
+                robottelemetry.update();
+            }
+
+            // Stop all motion after Path is completed;
+            motorLeftFront.setPower(0);
+            motorRightFront.setPower(0);
+            // Turn off RUN_TO_POSITION
+            enableEncoders();
+        }
+
+    }
+
+    /**
+     * @param speed
+     * @param leftMMdistance
+     * @param rightMMdistance
+     * @param timeoutS
+     */
+    public void encoderTurn(double speed, double leftMMdistance, double rightMMdistance, double timeoutS){
+        int newLeftFrontTarget;
+        int newLeftRearTarget;
+        int newRightFrontTarget;
+        int newRightRearTarget;
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+            //We use Tank Drive in all 4 wheels, so make sure we sent the correct signals to both Left and Right wheels
+            // Determine new target position, and pass to motor controller
+            newLeftFrontTarget = motorLeftFront.getCurrentPosition() + (int)(leftMMdistance * COUNTS_PER_MM);
+            newRightFrontTarget = motorRightFront.getCurrentPosition() + (int)(rightMMdistance * COUNTS_PER_MM);
+
+            motorLeftFront.setTargetPosition(newLeftFrontTarget);
+            motorRightFront.setTargetPosition(newRightFrontTarget);
+
+            // Turn On RUN_TO_POSITION
+            enableRunToPosition();
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            motorLeftFront.setPower(Math.abs(speed));
+            motorRightFront.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            //Only monitor the Back wheels
+            while (opModeIsActive() && (runtime.seconds() < timeoutS) && (motorLeftFront.isBusy() ||  motorRightFront.isBusy()))
+            {
+
+                // Display it for the Debugging.
+                robottelemetry.addData("Turn-Path-1",  "Running to Target LF,RF %7d :%7d", newLeftFrontTarget,  newRightFrontTarget);
+                robottelemetry.update();
+            }
+
+            robottelemetry.addData("Power Reset","Power set to 0");
+            robottelemetry.update();
+            // Stop all motion after Path is completed;
+            motorLeftFront.setPower(0);
+            motorRightFront.setPower(0);
+            // Turn off RUN_TO_POSITION
+            enableEncoders();
+        }
+    }
+
+    /**
+     * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
+     * @param degrees Degrees to turn, + is left - is right
+     */
+    public void rotate(int degrees, double power)
+    {
+        disableEncoders();
+        double  leftPower, rightPower;
+
+        // restart imu movement tracking.
+        resetAngle();
+
+        // getAngle() returns + when rotating counter clockwise (left) and - when rotating
+        // clockwise (right).
+
+        if (degrees < 0)
+        {   // turn right.
+            leftPower = power;
+            rightPower = -power;
+        }
+        else if (degrees > 0)
+        {   // turn left.
+            leftPower = -power;
+            rightPower = power;
+        }
+        else return;
+
+        // set power to rotate.
+        //leftMotor.setPower(leftPower);
+        //rightMotor.setPower(rightPower);
+        motorLeftFront.setPower(leftPower);
+        motorRightFront.setPower(rightPower);
+
+        // rotate until turn is completed.
+        if (degrees < 0)
+        {
+            // On right turn we have to get off zero first.
+            while (opModeIsActive() && getAngle() == 0) {}
+
+            while (opModeIsActive() && getAngle() > degrees) {}
+        }
+        else    // left turn.
+            while (opModeIsActive() && getAngle() < degrees) {}
+
+        // turn the motors off.
+        motorLeftFront.setPower(0);
+        motorRightFront.setPower(0);
+
+        // wait for rotation to stop.
+        sleep(1000);
+
+        // reset angle tracking on new heading.
+        resetAngle();
+    }
 
     public void stopRobot() {
         motorRightFront.setPower(0);
