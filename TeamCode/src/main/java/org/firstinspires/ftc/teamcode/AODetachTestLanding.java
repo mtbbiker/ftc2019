@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 //Simple Mode to Detach from Lander to determine position for other AutoModes
-//@Disabled
+@Disabled
 @Autonomous(name = "Exp_DetachTestLanding", group = "AutoOp")
 public class AODetachTestLanding extends AOPathBase {
 

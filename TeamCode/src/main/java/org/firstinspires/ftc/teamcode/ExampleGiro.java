@@ -21,7 +21,7 @@ import java.util.Locale;
 //Objective is to Train Students how Autonomous Features work
 //How to use the Giro to drive in a Straight line
 @Autonomous(name = "ExampleGiro", group = "AutoOpTraining")
-//@Disabled
+@Disabled
 public class ExampleGiro extends LinearOpMode {
 
     AutoOpRobot robot = new AutoOpRobot();

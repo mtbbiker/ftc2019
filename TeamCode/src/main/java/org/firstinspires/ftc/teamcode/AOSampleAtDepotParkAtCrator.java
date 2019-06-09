@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -22,6 +23,7 @@ import static java.lang.Math.abs;
 // Similiar to Mode 2, but Park for all sample positions at the same crater
 // Was intended to only sample and Park
 // But as in Mode 3 there is time to Drop Beacon
+@Disabled
 @Autonomous(name = "2_SampleAtDepotPark", group = "AutoOp")
 public class AOSampleAtDepotParkAtCrator extends LinearOpMode {
     public static final String TAG = "Vuforia VuMark Sample";

@@ -21,7 +21,7 @@ import java.util.Locale;
 //This Autonomous Mode will do the Following (It will not Drop a Beacon):
 // 1. Sample Mineral opposite the Crator
 // 2. Park at the Crator, avoiding Silver Minerals
-//@Disabled
+@Disabled
 @Autonomous(name = "1_SampleAtCratorAndPark", group = "AutoOp")
 public class AOSampleAndParkCrater extends LinearOpMode {
 

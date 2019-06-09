@@ -30,7 +30,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
-//@Disabled
+@Disabled
 @Autonomous(name = "TestingRun", group = "Testing")
 public class TestA extends LinearOpMode {
     CloneAutoOpRobot robot = new CloneAutoOpRobot();

@@ -19,7 +19,7 @@ import java.util.Locale;
 
 //This OpMode Sample across the Depot as Marco, Left stays left, center and Right goes to the Right Crater,
 // Drop the Beacon and Park Crator depending on mineral position
-//@Disabled
+@Disabled
 // This is the longest route and might be short on time
 @Autonomous(name = "3_SampleAtDepotDrpBeaconPark", group = "AutoOp")
 public class AOSampleAtDepotDropBeaconParkAtCrator extends LinearOpMode {
