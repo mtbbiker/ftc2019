@@ -9,6 +9,7 @@ package org.firstinspires.ftc.teamcode.training;
 
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -49,7 +50,9 @@ public class DriveAvoidImu extends LinearOpMode
         // get a reference to touch sensor.
         //touch = hardwareMap.touchSensor.get("touch_sensor");
         // get a reference to our digitalTouch object.
-        digitalTouch = hardwareMap.get(DigitalChannel.class, "touch_sensor");
+        digitalTouch = hardwareMap.get( DigitalChannel.class, "touch_sensor");
+
+        //TouchSensor dd = hardwareMap.touchSensor.get("touch_sensor");
 
         // set the digital channel to input.
         digitalTouch.setMode(DigitalChannel.Mode.INPUT);
@@ -80,6 +83,8 @@ public class DriveAvoidImu extends LinearOpMode
 
         telemetry.addData("Mode", "waiting for start");
         telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
+        telemetry.addData("Touch Sensor: ", digitalTouch.getManufacturer());
+        //telemetry.addData("Touch B",dd.isPressed());
         telemetry.update();
 
         // wait for start button.
@@ -101,6 +106,7 @@ public class DriveAvoidImu extends LinearOpMode
             telemetry.addData("1 imu heading", lastAngles.firstAngle);
             telemetry.addData("2 global heading", globalAngle);
             telemetry.addData("3 correction", correction);
+            telemetry.addData("Touch ===>B",digitalTouch.getState());
             telemetry.update();
 
             leftMotor.setPower(power - correction);
